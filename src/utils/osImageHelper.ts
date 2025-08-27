@@ -141,6 +141,11 @@ const osConfigs: OSConfig[] = [
     image: "/assets/os-windows.svg",
     keywords: ["windows", "win", "microsoft", "ms"],
   },
+  {
+    name: "QTS",
+    image: "/assets/os-qnap.png",
+    keywords: ["qts","quts hero","qes","qutscloud"],
+  },
 ];
 
 // 默认配置

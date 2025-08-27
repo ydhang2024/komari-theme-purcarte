@@ -17,7 +17,7 @@
                 "key": "backgroundImage",
                 "name": "背景图片链接",
                 "type": "string",
-                "default": "/assets/Moonlit-Scenery.webp",
+                "default": "/assets/stat_bj.webp",
                 "help": "目前仅支持单张背景图片（eg: https://test.com/1.png）"
             },
             {
@@ -49,7 +49,7 @@
                 "key": "enableLogo",
                 "name": "启用标题栏左侧 Logo",
                 "type": "switch",
-                "default": false,
+                "default": true,
                 "help": "启用后默认在标题栏左侧显示 Logo"
             },
             {
@@ -57,7 +57,7 @@
                 "name": "Logo 图片链接",
                 "type": "string",
                 "required": false,
-                "default": "/assets/logo.png",
+                "default": "/assets/stat_logo.png",
                 "help": "Logo 图片链接（eg: https://test.com/logo.png）"
             },
             {
