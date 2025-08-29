@@ -143,7 +143,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "QTS",
-    image: "/assets/os-qnap.png",
+    image: "/assets/os-qnap.svg",
     keywords: ["qts","quts hero","qes","qutscloud"],
   },
 ];

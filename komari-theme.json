@@ -57,7 +57,7 @@
                 "name": "Logo 图片链接",
                 "type": "string",
                 "required": false,
-                "default": "/assets/stat_logo.png",
+                "default": "/assets/stat_logo.svg",
                 "help": "Logo 图片链接（eg: https://test.com/logo.png）"
             },
             {
