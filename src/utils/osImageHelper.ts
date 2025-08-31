@@ -63,7 +63,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "ImmortalWrt",
-    image: "/assets/os-openwrt1.svg",
+    image: "/assets/os-openwrt.svg",
     keywords: ["immortalwrt", "immortal", "emmortal"],
   },
   {
@@ -108,7 +108,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "OpenWrt",
-    image: "/assets/os-openwrt1.svg",
+    image: "/assets/os-openwrt.svg",
     keywords: ["openwrt", "open wrt", "open-wrt", "qwrt"],
   },
   {
@@ -143,7 +143,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "QTS",
-    image: "/assets/os-qnap1.svg",
+    image: "/assets/os-qnap.svg",
     keywords: ["qts","quts hero","qes","qutscloud"],
   },
 ];
