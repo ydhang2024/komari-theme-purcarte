@@ -6,13 +6,19 @@ import Flag from "./Flag";
 import { Tag } from "../ui/tag";
 import { useNodeCommons } from "@/hooks/useNodeCommons";
 import { CircleProgress } from "../ui/circle-progress";
+import { ProgressBar } from "../ui/progress-bar";
 
 interface NodeListItemProps {
   node: NodeWithStatus;
   enableSwap: boolean | undefined;
+  enableListItemProgressBar: boolean | undefined;
 }
 
-export const NodeListItem = ({ node, enableSwap }: NodeListItemProps) => {
+export const NodeListItem = ({
+  node,
+  enableSwap,
+  enableListItemProgressBar,
+}: NodeListItemProps) => {
   const {
     stats,
     isOnline,
@@ -42,13 +48,15 @@ export const NodeListItem = ({ node, enableSwap }: NodeListItemProps) => {
             <div className="text-base font-bold">{node.name}</div>
             <Tag className="text-xs" tags={tagList} />
             <div className="flex text-xs">
-              <span className="text-secondary-foreground">到期：</span>
-              <div className="flex items-center gap-1">{expired_at}</div>
+              <span className="text-secondary-foreground">
+                到期：{expired_at}
+              </span>
             </div>
             <div className="flex text-xs">
-              <span className="text-secondary-foreground">在线：</span>
-              <span>
-                {isOnline && stats ? formatUptime(stats.uptime) : "离线"}
+              <span className="text-secondary-foreground">
+                {isOnline && stats
+                  ? `在线：${formatUptime(stats.uptime)}`
+                  : "离线"}
               </span>
             </div>
           </div>
@@ -58,16 +66,32 @@ export const NodeListItem = ({ node, enableSwap }: NodeListItemProps) => {
         <CpuIcon className="inline-block size-5 flex-shrink-0 text-blue-600" />
         <div className="ml-1 w-full items-center justify-center">
           <div>{node.cpu_cores} Cores</div>
-          <div>{isOnline ? `${cpuUsage.toFixed(1)}%` : "N/A"}</div>
+          {enableListItemProgressBar ? (
+            <div className="flex items-center gap-1">
+              <ProgressBar value={cpuUsage} h="h-2" />
+              <span className="w-10 text-right text-xs">
+                {isOnline ? `${cpuUsage.toFixed(0)}%` : "N/A"}
+              </span>
+            </div>
+          ) : (
+            <div>{isOnline ? `${cpuUsage.toFixed(0)}%` : "N/A"}</div>
+          )}
         </div>
       </div>
       <div className="col-span-1 flex items-center text-left">
         <MemoryStickIcon className="inline-block size-5 flex-shrink-0 text-green-600" />
         <div className="ml-1 w-full items-center justify-center">
           <div>{formatBytes(node.mem_total)}</div>
-          <div className="mt-1">
-            {isOnline ? `${memUsage.toFixed(1)}%` : "N/A"}
-          </div>
+          {enableListItemProgressBar ? (
+            <div className="flex items-center gap-1">
+              <ProgressBar value={memUsage} h="h-2" />
+              <span className="w-10 text-right text-xs">
+                {isOnline ? `${memUsage.toFixed(0)}%` : "N/A"}
+              </span>
+            </div>
+          ) : (
+            <div>{isOnline ? `${memUsage.toFixed(0)}%` : "N/A"}</div>
+          )}
         </div>
       </div>
       {enableSwap && (
@@ -76,9 +100,16 @@ export const NodeListItem = ({ node, enableSwap }: NodeListItemProps) => {
           {node.swap_total > 0 ? (
             <div className="ml-1 w-full items-center justify-center">
               <div>{formatBytes(node.swap_total)}</div>
-              <div className="mt-1">
-                {isOnline ? `${swapUsage.toFixed(1)}%` : "N/A"}
-              </div>
+              {enableListItemProgressBar ? (
+                <div className="flex items-center gap-1">
+                  <ProgressBar value={swapUsage} h="h-2" />
+                  <span className="w-10 text-right text-xs">
+                    {isOnline ? `${swapUsage.toFixed(0)}%` : "N/A"}
+                  </span>
+                </div>
+              ) : (
+                <div>{isOnline ? `${swapUsage.toFixed(0)}%` : "N/A"}</div>
+              )}
             </div>
           ) : (
             <div className="ml-1 w-full item-center justify-center">OFF</div>
@@ -89,9 +120,16 @@ export const NodeListItem = ({ node, enableSwap }: NodeListItemProps) => {
         <HardDriveIcon className="inline-block size-5 flex-shrink-0 text-red-600" />
         <div className="ml-1 w-full items-center justify-center">
           <div>{formatBytes(node.disk_total)}</div>
-          <div className="mt-1">
-            {isOnline ? `${diskUsage.toFixed(1)}%` : "N/A"}
-          </div>
+          {enableListItemProgressBar ? (
+            <div className="flex items-center gap-1">
+              <ProgressBar value={diskUsage} h="h-2" />
+              <span className="w-10 text-right text-xs">
+                {isOnline ? `${diskUsage.toFixed(0)}%` : "N/A"}
+              </span>
+            </div>
+          ) : (
+            <div>{isOnline ? `${diskUsage.toFixed(0)}%` : "N/A"}</div>
+          )}
         </div>
       </div>
       <div className="col-span-1">
