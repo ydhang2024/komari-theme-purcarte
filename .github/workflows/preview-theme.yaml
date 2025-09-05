@@ -38,7 +38,7 @@ jobs:
 
           # Update komari-theme.json with new version and description
           jq --arg version "$VERSION_DATE" \
-              --arg desc "Preview theme for PurCarte (commit: $COMMIT_HASH)" \
+              --arg desc "一款毛玻璃特效的主题(commit: $COMMIT_HASH)" \
               '.name = .name + " (Preview)" | .short = .short + "Preview" | .version = $version | .description = $desc' \
               komari-theme.json > komari-theme-updated.json
 

@@ -15,11 +15,11 @@ const Footer: React.FC = () => {
         {" | "}
         Theme by{" "}
         <a
-          href="https://github.com/Montia37/komari-theme-purcarte"
+          href="https://github.com/ydhang2024/komari-theme-purcarte"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 hover:text-blue-600 transition-colors">
-          PurCarte
+          Hang
         </a>
       </p>
     </footer>

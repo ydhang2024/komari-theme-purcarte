@@ -3,8 +3,8 @@
     "short": "PurCarte",
     "description": "A frosted glass theme for Komari",
     "version": "tags:VERSION",
-    "author": "Montia & Gemini",
-    "url": "https://github.com/Montia37/Komari-theme-purcarte",
+    "author": "Hang",
+    "url": "https://github.com/ydhang2024/komari-theme-purcarte",
     "preview": "preview.png",
     "configuration": {
         "type": "managed",
