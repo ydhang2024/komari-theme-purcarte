@@ -5,7 +5,7 @@
     "version": "tags:VERSION",
     "author": "Hang",
     "url": "https://github.com/ydhang2024/komari-theme-purcarte",
-    "preview": "preview.png",
+    "preview": "cover.png",
     "configuration": {
         "type": "managed",
         "data": [
