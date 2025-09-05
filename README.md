@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="300" src="./preview.png" alt="PurCarte Theme Preview">
+<img width="300" src="./cover.png" alt="PurCarte Theme Preview">
 
 ## ✨ PurCarte ✨
 
