@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useIsMobile } from "@/hooks/useMobile";
 import { useConfigItem } from "@/config";
+import { useTheme } from "@/hooks/useTheme";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +24,6 @@ import {
 interface HeaderProps {
   viewMode: "grid" | "table";
   setViewMode: (mode: "grid" | "table") => void;
-  theme: string;
-  toggleTheme: () => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
@@ -32,11 +31,10 @@ interface HeaderProps {
 export const Header = ({
   viewMode,
   setViewMode,
-  theme,
-  toggleTheme,
   searchTerm,
   setSearchTerm,
 }: HeaderProps) => {
+  const { appearance, setAppearance } = useTheme();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const isInstancePage = location.pathname.startsWith("/instance");
@@ -54,10 +52,14 @@ export const Header = ({
     }
   }, [sitename]);
 
+  const toggleAppearance = () => {
+    setAppearance(appearance === "light" ? "dark" : "light");
+  };
+
   return (
-    <header className="purcarte-blur border-b border-border sticky top-0 flex items-center justify-center shadow-sm z-10">
+    <header className="purcarte-blur border-b border-(--accent-4)/50 sticky top-0 flex items-center justify-center shadow-sm shadow-(color:--accent-4)/50 z-10">
       <div className="w-[90%] max-w-screen-2xl px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center text-shadow-lg text-accent-foreground">
+        <div className="flex items-center theme-text-shadow text-accent-foreground">
           <a href="/" className="flex items-center gap-2 text-2xl font-bold">
             {enableLogo && logoUrl && (
               <img src={logoUrl} alt="logo" className="h-8" />
@@ -70,43 +72,49 @@ export const Header = ({
             <>
               {isMobile ? (
                 <>
-                  <div
-                    className={`absolute top-full left-0 w-full purcarte-blur p-2 border-b border-border shadow-sm z-10 transform transition-all duration-300 ease-in-out ${
-                      isSearchOpen
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 -translate-y-4 pointer-events-none"
-                    }`}>
-                    <Input
-                      type="search"
-                      placeholder="搜索服务器..."
-                      className="w-full"
-                      value={searchTerm}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setSearchTerm(e.target.value)
-                      }
-                    />
-                  </div>
                   {enableSearchButton && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsSearchOpen(!isSearchOpen)}>
-                      <Search className="size-5 text-primary" />
-                    </Button>
+                    <DropdownMenu modal={false}>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="relative group">
+                          <Search className="size-5 text-primary" />
+                          {searchTerm && (
+                            <span className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full bg-(--accent-indicator) transform -translate-x-1/2"></span>
+                          )}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="purcarte-blur border-(--accent-4)/50 rounded-xl w-[90vw] translate-x-[5vw] mt-[.5rem] max-w-screen-2xl">
+                        <div className="p-2">
+                          <Input
+                            type="search"
+                            placeholder="搜索服务器..."
+                            className="w-full"
+                            value={searchTerm}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => setSearchTerm(e.target.value)}
+                          />
+                        </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   )}
-                  <DropdownMenu>
+                  <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
                         size="icon"
                         className="relative group">
                         <Menu className="size-5 text-primary transition-transform duration-300 group-data-[state=open]:rotate-180" />
-                        <span className="absolute -bottom-1 left-1/2 w-1.5 h-1.5 rounded-full bg-primary transform -translate-x-1/2 scale-0 transition-transform duration-300 group-data-[state=open]:scale-100"></span>
+                        <span className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full bg-(--accent-indicator) transform -translate-x-1/2 scale-0 transition-transform duration-300 group-data-[state=open]:scale-100"></span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
                       align="end"
-                      className="animate-in slide-in-from-top-5 duration-300 purcarte-blur border-border rounded-xl">
+                      className="purcarte-blur mt-[.5rem] border-(--accent-4)/50 rounded-xl">
                       <DropdownMenuItem
                         onClick={() =>
                           setViewMode(viewMode === "grid" ? "table" : "grid")
@@ -120,14 +128,14 @@ export const Header = ({
                           {viewMode === "grid" ? "表格视图" : "网格视图"}
                         </span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={toggleTheme}>
-                        {theme === "dark" ? (
+                      <DropdownMenuItem onClick={toggleAppearance}>
+                        {appearance === "dark" ? (
                           <Sun className="size-4 mr-2 text-primary" />
                         ) : (
                           <Moon className="size-4 mr-2 text-primary" />
                         )}
                         <span>
-                          {theme === "dark" ? "浅色模式" : "深色模式"}
+                          {appearance === "dark" ? "浅色模式" : "深色模式"}
                         </span>
                       </DropdownMenuItem>
                       {enableAdminButton && (
@@ -167,8 +175,12 @@ export const Header = ({
                     <Button
                       variant="ghost"
                       size="icon"
+                      className="relative group"
                       onClick={() => setIsSearchOpen(!isSearchOpen)}>
                       <Search className="size-5 text-primary" />
+                      {searchTerm && (
+                        <span className="absolute top-0 right-0 w-1.5 h-1.5 rounded-full bg-(--accent-indicator) transform -translate-x-1/2"></span>
+                      )}
                     </Button>
                   )}
                   <Button
@@ -183,8 +195,11 @@ export const Header = ({
                       <Grid3X3 className="size-5 text-primary" />
                     )}
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={toggleTheme}>
-                    {theme === "dark" ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleAppearance}>
+                    {appearance === "dark" ? (
                       <Sun className="size-5 text-primary" />
                     ) : (
                       <Moon className="size-5 text-primary" />
@@ -216,14 +231,16 @@ export const Header = ({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="animate-in slide-in-from-top-5 duration-300 purcarte-blur border-border rounded-xl">
-                    <DropdownMenuItem onClick={toggleTheme}>
-                      {theme === "dark" ? (
+                    className="animate-in slide-in-from-top-5 duration-300 purcarte-blur border-(--accent-4)/50 rounded-xl">
+                    <DropdownMenuItem onClick={toggleAppearance}>
+                      {appearance === "dark" ? (
                         <Sun className="size-4 mr-2 text-primary" />
                       ) : (
                         <Moon className="size-4 mr-2 text-primary" />
                       )}
-                      <span>{theme === "dark" ? "浅色模式" : "深色模式"}</span>
+                      <span>
+                        {appearance === "dark" ? "浅色模式" : "深色模式"}
+                      </span>
                     </DropdownMenuItem>
                     {enableAdminButton && (
                       <DropdownMenuItem asChild>
@@ -241,8 +258,11 @@ export const Header = ({
                 </DropdownMenu>
               ) : (
                 <>
-                  <Button variant="ghost" size="icon" onClick={toggleTheme}>
-                    {theme === "dark" ? (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={toggleAppearance}>
+                    {appearance === "dark" ? (
                       <Sun className="size-5 text-primary" />
                     ) : (
                       <Moon className="size-5 text-primary" />

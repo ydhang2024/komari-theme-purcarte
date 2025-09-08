@@ -42,9 +42,15 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
 
   useEffect(() => {
     if (pingHistory?.tasks) {
-      setVisiblePingTasks(pingHistory.tasks.map((t) => t.id));
+      const taskIds = pingHistory.tasks.map((t) => t.id);
+      setVisiblePingTasks((prevVisibleTasks) => {
+        const newVisibleTasks = taskIds.filter(
+          (id) => prevVisibleTasks.length === 0 || prevVisibleTasks.includes(id)
+        );
+        return newVisibleTasks.length > 0 ? newVisibleTasks : taskIds;
+      });
     }
-  }, [pingHistory]);
+  }, [pingHistory?.tasks]);
 
   const lableFormatter = useCallback(
     (value: any) => {
@@ -350,13 +356,13 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
                       minute: "2-digit",
                     });
                   }}
-                  tick={{ fill: "var(--muted-foreground)" }}
+                  tick={{ fill: "var(--theme-text-muted-color)" }}
                   scale="time"
                 />
                 <YAxis
                   mirror={true}
                   width={30}
-                  tick={{ fill: "var(--muted-foreground)" }}
+                  tick={{ fill: "var(--theme-text-muted-color)" }}
                 />
                 <Tooltip
                   cursor={false}
@@ -388,7 +394,8 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
                 <Brush
                   dataKey="time"
                   height={30}
-                  stroke="#8884d8"
+                  stroke="var(--accent-track)"
+                  fill="var(--accent-4)"
                   alwaysShowText
                   tickFormatter={(time) => {
                     const date = new Date(time);

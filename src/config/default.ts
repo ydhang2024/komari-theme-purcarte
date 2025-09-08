@@ -1,16 +1,20 @@
 // 配置类型定义
 export interface ConfigOptions {
   backgroundImage?: string; // 背景图片URL
+  enableVideoBackground?: boolean; // 是否启用视频背景
+  videoBackgroundUrl?: string; // 视频背景URL
   blurValue?: number; // 磨砂玻璃模糊值
   blurBackgroundColor?: string; // 磨砂玻璃背景颜色
   tagDefaultColorList?: string; // 标签默认颜色列表
+  enableLocalStorage?: boolean; // 是否启用本地存储
+  selectedDefaultView?: "grid" | "table"; // 默认视图模式
+  selectedDefaultAppearance?: "light" | "dark" | "system"; // 默认外观模式
+  selectThemeColor?: string; // 默认主题颜色
   enableLogo?: boolean; // 是否启用Logo
   logoUrl?: string; // Logo图片URL
   enableTitle?: boolean; // 是否启用标题
   titleText?: string; // 标题文本
   enableSearchButton?: boolean; // 是否启用搜索按钮
-  selectedDefaultView?: "grid" | "table"; // 默认视图模式
-  selectedDefaultAppearance?: "light" | "dark" | "system"; // 默认外观模式
   enableAdminButton?: boolean; // 是否启用管理员按钮
   enableStatsBar?: boolean; // 是否启用统计栏
   enableGroupedBar?: boolean; // 是否启用分组栏
@@ -25,17 +29,21 @@ export interface ConfigOptions {
 // 默认配置值
 export const DEFAULT_CONFIG: ConfigOptions = {
   backgroundImage: "/assets/Moonlit-Scenery.webp",
+  enableVideoBackground: false,
+  videoBackgroundUrl: "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
   blurValue: 10,
   blurBackgroundColor: "rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)",
   tagDefaultColorList:
-    "ruby,gray,gold,bronze,brown,yellow,amber,orange,tomato,red,crimson,pink,plum,purple,violet,iris,indigo,blue,cyan,teal,jade,green,grass,lime,mint,sky",
+    "ruby,gray,gold,bronze,brown,yellow,amber,orange,tomato,red",
+  enableLocalStorage: true,
+  selectedDefaultView: "grid",
+  selectedDefaultAppearance: "system",
+  selectThemeColor: "gray",
   enableLogo: false,
   logoUrl: "/assets/logo.png",
   enableTitle: true,
   titleText: "Komari",
   enableSearchButton: true,
-  selectedDefaultView: "grid",
-  selectedDefaultAppearance: "system",
   enableAdminButton: true,
   enableStatsBar: true,
   enableGroupedBar: true,

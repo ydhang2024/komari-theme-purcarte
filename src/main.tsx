@@ -19,36 +19,52 @@ const NotFoundPage = lazy(() => import("@/pages/NotFound"));
 
 import { useConfigItem } from "@/config";
 
-// eslint-disable-next-line react-refresh/only-export-components
-const App = () => {
-  const { theme, toggleTheme } = useTheme();
-  const { publicSettings } = useNodeData();
+// 内部应用组件，在 ConfigProvider 内部使用配置
+export const AppContent = () => {
+  const { appearance, color } = useTheme();
   const defaultView = useConfigItem("selectedDefaultView");
+  const enableLocalStorage = useConfigItem("enableLocalStorage");
 
   const [viewMode, setViewMode] = useState<"grid" | "table">(() => {
-    const savedMode = localStorage.getItem("nodeViewMode");
-    return savedMode === "grid" || savedMode === "table"
-      ? savedMode
-      : defaultView || "grid";
+    if (enableLocalStorage) {
+      const savedMode = localStorage.getItem("nodeViewMode");
+      const cleanedMode = savedMode ? savedMode.replace(/^"|"$/g, "") : null;
+      if (cleanedMode === "grid" || cleanedMode === "table") {
+        return cleanedMode;
+      }
+    }
+    return defaultView || "grid";
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const enableVideoBackground = useConfigItem("enableVideoBackground");
+  const videoBackgroundUrl = useConfigItem("videoBackgroundUrl");
 
   useEffect(() => {
-    localStorage.setItem("nodeViewMode", viewMode);
-  }, [viewMode]);
+    if (enableLocalStorage) {
+      localStorage.setItem("nodeViewMode", viewMode);
+    }
+  }, [enableLocalStorage, viewMode]);
 
   return (
-    <ConfigProvider publicSettings={publicSettings}>
+    <>
+      {enableVideoBackground && videoBackgroundUrl && (
+        <video
+          src={videoBackgroundUrl as string}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="fixed right-0 bottom-0 min-w-full min-h-full w-auto h-auto -z-1 object-cover"></video>
+      )}
       <Theme
-        appearance="inherit"
+        appearance={appearance === "system" ? "inherit" : appearance}
+        accentColor={color}
         scaling="110%"
         style={{ backgroundColor: "transparent" }}>
         <div className="min-h-screen flex flex-col text-sm">
           <Header
             viewMode={viewMode}
             setViewMode={setViewMode}
-            theme={theme}
-            toggleTheme={toggleTheme}
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
@@ -57,7 +73,11 @@ const App = () => {
               <Route
                 path="/"
                 element={
-                  <HomePage viewMode={viewMode} searchTerm={searchTerm} />
+                  <HomePage
+                    viewMode={viewMode}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                  />
                 }
               />
               <Route path="/instance/:uuid" element={<InstancePage />} />
@@ -67,6 +87,20 @@ const App = () => {
           <Footer />
         </div>
       </Theme>
+    </>
+  );
+};
+
+const App = () => {
+  const { publicSettings, loading } = useNodeData();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  return (
+    <ConfigProvider publicSettings={publicSettings}>
+      <AppContent />
     </ConfigProvider>
   );
 };
