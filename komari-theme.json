@@ -178,7 +178,7 @@
                 "type": "select",
                 "options": "circular,linear",
                 "default": "circular",
-                "help": "设置流量进度条样式为 circular（环形）或 linear（线形）"
+                "help": "设置流量进度条样式为 circular(环形)或 linear(线形)"
             },
             {
                 "key": "enableListItemProgressBar",
