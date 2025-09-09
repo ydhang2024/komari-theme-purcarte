@@ -9,6 +9,7 @@ import type { NodeWithStatus } from "@/types/node";
 import { useNodeData } from "@/contexts/NodeDataContext";
 import { useLiveData } from "@/contexts/LiveDataContext";
 import { useAppConfig } from "@/config";
+import { useTheme } from "@/hooks/useTheme";
 import {
   Card,
   CardDescription,
@@ -18,7 +19,6 @@ import {
 } from "@/components/ui/card";
 
 interface HomePageProps {
-  viewMode: "grid" | "table";
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
@@ -28,11 +28,9 @@ const homeStateCache = {
   scrollPosition: 0,
 };
 
-const HomePage: React.FC<HomePageProps> = ({
-  viewMode,
-  searchTerm,
-  setSearchTerm,
-}) => {
+const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
+  const { viewMode, statusCardsVisibility, setStatusCardsVisibility } =
+    useTheme();
   const { nodes: staticNodes, loading, getGroups } = useNodeData();
   const { liveData } = useLiveData();
   const [selectedGroup, setSelectedGroup] = useState(
@@ -45,14 +43,6 @@ const HomePage: React.FC<HomePageProps> = ({
     enableListItemProgressBar,
     selectTrafficProgressStyle,
   } = useAppConfig();
-  const [displayOptions, setDisplayOptions] = useState({
-    time: true,
-    online: true,
-    regions: true,
-    traffic: true,
-    speed: true,
-  });
-
   const combinedNodes = useMemo<NodeWithStatus[]>(() => {
     if (!staticNodes) return [];
     return staticNodes.map((node) => {
@@ -137,8 +127,8 @@ const HomePage: React.FC<HomePageProps> = ({
       className="w-[90%] max-w-screen-2xl mx-auto flex-1 flex flex-col pb-10 overflow-y-auto">
       {enableStatsBar && (
         <StatsBar
-          displayOptions={displayOptions}
-          setDisplayOptions={setDisplayOptions}
+          displayOptions={statusCardsVisibility}
+          setDisplayOptions={setStatusCardsVisibility}
           stats={stats}
           loading={loading}
         />

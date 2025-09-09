@@ -1,5 +1,6 @@
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import { useConfigItem } from "@/config";
+import { DEFAULT_CONFIG } from "@/config/default";
 
 export const allowedColors = [
   "gray",
@@ -35,25 +36,42 @@ export type Colors = (typeof allowedColors)[number];
 export const allowedAppearances = ["light", "dark", "system"] as const;
 export type Appearance = (typeof allowedAppearances)[number];
 
-export const THEME_DEFAULTS = {
-  appearance: "system" as Appearance,
-  color: "gray" as Colors,
-} as const;
-
 export interface ThemeContextType {
   appearance: "light" | "dark";
   rawAppearance: Appearance;
   setAppearance: (appearance: Appearance) => void;
   color: Colors;
   setColor: (color: Colors) => void;
+  viewMode: "grid" | "table";
+  setViewMode: (mode: "grid" | "table") => void;
+  statusCardsVisibility: {
+    currentTime: true;
+    currentOnline: true;
+    regionOverview: true;
+    trafficOverview: true;
+    networkSpeed: true;
+  };
+  setStatusCardsVisibility: (
+    visibility: Partial<ThemeContextType["statusCardsVisibility"]>
+  ) => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
   appearance: "light",
-  rawAppearance: THEME_DEFAULTS.appearance,
+  rawAppearance: DEFAULT_CONFIG.selectedDefaultAppearance as Appearance,
   setAppearance: () => {},
-  color: THEME_DEFAULTS.color,
+  color: DEFAULT_CONFIG.selectThemeColor as Colors,
   setColor: () => {},
+  viewMode: DEFAULT_CONFIG.selectedDefaultView as "grid" | "table",
+  setViewMode: () => {},
+  statusCardsVisibility: {
+    currentTime: true,
+    currentOnline: true,
+    regionOverview: true,
+    trafficOverview: true,
+    networkSpeed: true,
+  },
+  setStatusCardsVisibility: () => {},
 });
 
 /**
@@ -98,48 +116,90 @@ export const useSystemTheme = (appearance: Appearance): "light" | "dark" => {
   return appearance as "light" | "dark";
 };
 
-import { useContext } from "react";
-
-export const useThemeManager = () => {
+const useStoredState = <T>(
+  key: string,
+  defaultValue: T,
+  validator?: (value: any) => value is T
+): [T, React.Dispatch<React.SetStateAction<T>>] => {
   const enableLocalStorage = useConfigItem("enableLocalStorage");
-  const defaultAppearance = useConfigItem("selectedDefaultAppearance");
-  const defaultColor = useConfigItem("selectThemeColor");
 
-  const [appearance, setAppearance] = useState<Appearance>(() => {
+  const [state, setState] = useState<T>(() => {
     if (enableLocalStorage) {
-      const storedAppearance = localStorage.getItem("appearance");
-      const cleanedAppearance = storedAppearance
-        ? storedAppearance.replace(/^"|"$/g, "")
-        : null;
-      if (allowedAppearances.includes(cleanedAppearance as Appearance)) {
-        return cleanedAppearance as Appearance;
+      try {
+        const storedValue = localStorage.getItem(key);
+        if (storedValue) {
+          const parsedValue = JSON.parse(storedValue);
+          if (!validator || validator(parsedValue)) {
+            return parsedValue as T;
+          }
+        }
+      } catch (error) {
+        console.error("Error parsing stored state:", error);
+        // Fallback to default value if parsing fails
       }
     }
-    return (defaultAppearance as Appearance) || THEME_DEFAULTS.appearance;
+    return defaultValue;
   });
-
-  const [color, setColor] = useState<Colors>(() => {
-    if (enableLocalStorage) {
-      const storedColor = localStorage.getItem("color");
-      const cleanedColor = storedColor
-        ? storedColor.replace(/^"|"$/g, "")
-        : null;
-      if (allowedColors.includes(cleanedColor as Colors)) {
-        return cleanedColor as Colors;
-      }
-    }
-
-    return (defaultColor as Colors) || THEME_DEFAULTS.color;
-  });
-
-  const resolvedAppearance = useSystemTheme(appearance);
 
   useEffect(() => {
     if (enableLocalStorage) {
-      localStorage.setItem("appearance", appearance);
-      localStorage.setItem("color", color);
+      try {
+        localStorage.setItem(key, JSON.stringify(state));
+      } catch (error) {
+        console.error("Error setting stored state:", error);
+      }
     }
-  }, [appearance, color, enableLocalStorage]);
+  }, [key, state, enableLocalStorage]);
+
+  return [state, setState];
+};
+
+export const useThemeManager = () => {
+  const defaultAppearance = useConfigItem(
+    "selectedDefaultAppearance"
+  ) as Appearance;
+  const defaultColor = useConfigItem("selectThemeColor") as Colors;
+  const defaultView = useConfigItem("selectedDefaultView") as "grid" | "table";
+  const defaultStatusCardsVisibility = useConfigItem(
+    "statusCardsVisibility"
+  ) as string;
+
+  const [appearance, setAppearance] = useStoredState<Appearance>(
+    "appearance",
+    defaultAppearance,
+    (v): v is Appearance => allowedAppearances.includes(v)
+  );
+
+  const [color, setColor] = useStoredState<Colors>("color", defaultColor);
+
+  const [viewMode, setViewMode] = useStoredState<"grid" | "table">(
+    "nodeViewMode",
+    defaultView
+  );
+
+  const [statusCardsVisibility, setStatusCardsVisibility] = useStoredState(
+    "statusCardsVisibility",
+    (() => {
+      const visibility: { [key: string]: boolean } = {};
+      defaultStatusCardsVisibility.split(",").forEach((item) => {
+        const [key, value] = item.split(":");
+        visibility[key] = value === "true";
+      });
+      return visibility as ThemeContextType["statusCardsVisibility"];
+    })()
+  );
+
+  const handleSetStatusCardsVisibility = (
+    newVisibility: Partial<ThemeContextType["statusCardsVisibility"]>
+  ) => {
+    setStatusCardsVisibility((prev) => ({ ...prev, ...newVisibility }));
+  };
+
+  useEffect(() => {
+    setColor(defaultColor);
+  }, [defaultColor, setColor]);
+
+  const resolvedAppearance = useSystemTheme(appearance);
 
   return {
     appearance: resolvedAppearance,
@@ -147,9 +207,12 @@ export const useThemeManager = () => {
     setAppearance,
     color,
     setColor,
+    viewMode,
+    setViewMode,
+    statusCardsVisibility,
+    setStatusCardsVisibility: handleSetStatusCardsVisibility,
   };
 };
-
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
