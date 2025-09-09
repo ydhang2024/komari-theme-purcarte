@@ -113,7 +113,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "Proxmox VE",
-    image: "/assets/os-proxmox.ico",
+    image: "/assets/os-proxmox.svg",
     keywords: ["proxmox", "proxmox ve"],
   },
   {
