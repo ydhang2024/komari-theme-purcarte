@@ -12,7 +12,7 @@ export default function NotFound() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-grow items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">404 - Not Found</CardTitle>
