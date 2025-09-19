@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { StatsBar } from "@/components/sections/StatsBar";
 import { NodeCard } from "@/components/sections/NodeCard";
@@ -10,6 +10,8 @@ import { useNodeData } from "@/contexts/NodeDataContext";
 import { useLiveData } from "@/contexts/LiveDataContext";
 import { useAppConfig } from "@/config";
 import { useTheme } from "@/hooks/useTheme";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import type { StatsBarProps } from "@/components/sections/StatsBar";
 import {
   Card,
   CardDescription,
@@ -17,31 +19,45 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useCompactLayout } from "@/hooks/useCompactLayout";
 
 interface HomePageProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  setStatsBarProps: (props: StatsBarProps | null) => void;
 }
-
 const homeStateCache = {
   selectedGroup: "所有",
-  scrollPosition: 0,
+  hasLoaded: false,
 };
 
-const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
+const HomePage: React.FC<HomePageProps> = ({
+  searchTerm,
+  setSearchTerm,
+  setStatsBarProps,
+}) => {
   const { viewMode, statusCardsVisibility, setStatusCardsVisibility } =
     useTheme();
-  const { nodes: staticNodes, loading, getGroups } = useNodeData();
+  const {
+    nodes: staticNodes,
+    loading,
+    getGroups,
+    error,
+    refreshNodes,
+  } = useNodeData();
   const { liveData } = useLiveData();
   const [selectedGroup, setSelectedGroup] = useState(
     homeStateCache.selectedGroup
   );
+  const [isLoaded, setIsLoaded] = useState(homeStateCache.hasLoaded);
   const {
     enableGroupedBar,
     enableStatsBar,
     enableSwap,
     enableListItemProgressBar,
     selectTrafficProgressStyle,
+    enableCompactMode,
+    mergeGroupsWithStats,
   } = useAppConfig();
   const combinedNodes = useMemo<NodeWithStatus[]>(() => {
     if (!staticNodes || staticNodes === "private") return [];
@@ -59,6 +75,8 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
 
   const groups = useMemo(() => ["所有", ...getGroups()], [getGroups]);
 
+  const { layoutIsMobile } = useCompactLayout(enableCompactMode);
+
   const filteredNodes = useMemo(() => {
     return combinedNodes
       .filter(
@@ -69,6 +87,8 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
         node.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
   }, [combinedNodes, selectedGroup, searchTerm]);
+
+  const hasSearchTerm = searchTerm.trim().length > 0;
 
   const stats = useMemo(() => {
     return {
@@ -94,26 +114,27 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
     };
   }, [filteredNodes]);
 
-  const mainContentRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const handleScroll = () => {
-      if (mainContentRef.current) {
-        homeStateCache.scrollPosition = mainContentRef.current.scrollTop;
-      }
-    };
+    if (loading) return;
 
-    const mainContentElement = mainContentRef.current;
-    mainContentElement?.addEventListener("scroll", handleScroll);
+    if (homeStateCache.hasLoaded) {
+      setIsLoaded(true);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+      homeStateCache.hasLoaded = true;
+    }, 300); // 动画过渡
 
     return () => {
-      mainContentElement?.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
     };
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
-    if (mainContentRef.current) {
-      mainContentRef.current.scrollTop = homeStateCache.scrollPosition;
+    if (!loading && !homeStateCache.hasLoaded) {
+      homeStateCache.hasLoaded = true;
     }
   }, [loading]);
 
@@ -121,93 +142,147 @@ const HomePage: React.FC<HomePageProps> = ({ searchTerm, setSearchTerm }) => {
     homeStateCache.selectedGroup = selectedGroup;
   }, [selectedGroup]);
 
+  useEffect(() => {
+    setStatsBarProps({
+      displayOptions: statusCardsVisibility,
+      setDisplayOptions: setStatusCardsVisibility,
+      stats,
+      loading,
+      enableGroupedBar,
+      groups,
+      selectedGroup,
+      onSelectGroup: setSelectedGroup,
+    });
+  }, [
+    statusCardsVisibility,
+    setStatusCardsVisibility,
+    stats,
+    loading,
+    enableGroupedBar,
+    groups,
+    selectedGroup,
+    setSelectedGroup,
+    setStatsBarProps,
+  ]);
+
+  if (!isLoaded) {
+    return (
+      <Loading
+        text="正在努力获取数据中..."
+        className={!loading ? "fade-out" : ""}
+      />
+    );
+  }
+
   return (
-    <div
-      ref={mainContentRef}
-      className="w-[90%] max-w-screen-2xl mx-auto flex-1 flex flex-col pb-10 overflow-y-auto">
-      {enableStatsBar && (
+    <div className="fade-in">
+      {enableStatsBar && (!enableCompactMode || layoutIsMobile) && (
         <StatsBar
           displayOptions={statusCardsVisibility}
           setDisplayOptions={setStatusCardsVisibility}
           stats={stats}
           loading={loading}
+          enableCompactMode={enableCompactMode}
+          enableGroupedBar={enableGroupedBar}
+          groups={groups}
+          selectedGroup={selectedGroup}
+          onSelectGroup={setSelectedGroup}
         />
       )}
 
-      <main className="flex-1 px-4 pb-4">
-        {enableGroupedBar && (
-          <div className="flex purcarte-blur theme-card-style overflow-auto whitespace-nowrap overflow-x-auto items-center min-w-[300px] text-secondary-foreground space-x-4 px-4 mb-4">
-            <span>分组</span>
-            {groups.map((group: string) => (
-              <Button
-                key={group}
-                variant={selectedGroup === group ? "secondary" : "ghost"}
-                size="sm"
-                onClick={() => setSelectedGroup(group)}>
-                {group}
-              </Button>
-            ))}
-          </div>
-        )}
+      {enableGroupedBar && !mergeGroupsWithStats && (
+        <div className="flex purcarte-blur theme-card-style overflow-auto whitespace-nowrap overflow-x-auto items-center min-w-[300px] text-secondary-foreground space-x-4 px-4 my-4">
+          <span>分组</span>
+          {groups?.map((group: string) => (
+            <Button
+              key={group}
+              variant={selectedGroup === group ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setSelectedGroup?.(group)}>
+              {group}
+            </Button>
+          ))}
+        </div>
+      )}
 
-        <div className="space-y-4 mt-4">
-          {loading ? (
-            <Loading text="正在努力获取数据中..." />
-          ) : filteredNodes.length > 0 ? (
-            <div
-              className={
-                viewMode === "grid"
-                  ? ""
-                  : "space-y-2 overflow-auto purcarte-blur theme-card-style p-2"
-              }>
-              <div
-                className={
-                  viewMode === "grid"
-                    ? "grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4"
-                    : "min-w-[1080px]"
-                }>
+      <div className="space-y-4 my-4">
+        {filteredNodes.length > 0 ? (
+          viewMode === "grid" ? (
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+              {filteredNodes.map((node: NodeWithStatus) => (
+                <NodeCard
+                  key={node.uuid}
+                  node={node}
+                  enableSwap={enableSwap}
+                  selectTrafficProgressStyle={selectTrafficProgressStyle}
+                />
+              ))}
+            </div>
+          ) : (
+            <ScrollArea
+              className="purcarte-blur theme-card-style w-full"
+              viewportProps={{ className: "p-2" }}
+              showHorizontalScrollbar>
+              <div className="space-y-2 min-w-[1080px]">
                 {viewMode === "table" && (
                   <NodeListHeader enableSwap={enableSwap} />
                 )}
-                {filteredNodes.map((node: NodeWithStatus) =>
-                  viewMode === "grid" ? (
-                    <NodeCard
-                      key={node.uuid}
-                      node={node}
-                      enableSwap={enableSwap}
-                      selectTrafficProgressStyle={selectTrafficProgressStyle}
-                    />
-                  ) : (
-                    <NodeListItem
-                      key={node.uuid}
-                      node={node}
-                      enableSwap={enableSwap}
-                      enableListItemProgressBar={enableListItemProgressBar}
-                      selectTrafficProgressStyle={selectTrafficProgressStyle}
-                    />
-                  )
-                )}
+                {filteredNodes.map((node: NodeWithStatus) => (
+                  <NodeListItem
+                    key={node.uuid}
+                    node={node}
+                    enableSwap={enableSwap}
+                    enableListItemProgressBar={enableListItemProgressBar}
+                    selectTrafficProgressStyle={selectTrafficProgressStyle}
+                  />
+                ))}
               </div>
-            </div>
-          ) : (
-            <div className="flex flex-grow items-center justify-center">
-              <Card className="w-full max-w-md">
-                <CardHeader>
-                  <CardTitle className="text-2xl font-bold">
-                    Not Found
-                  </CardTitle>
-                  <CardDescription>请尝试更改筛选条件</CardDescription>
-                </CardHeader>
-                <CardFooter>
+            </ScrollArea>
+          )
+        ) : (
+          <div className="flex flex-grow items-center justify-center">
+            <Card className="w-full max-w-md">
+              <CardHeader>
+                <CardTitle className="text-2xl font-bold">
+                  {hasSearchTerm
+                    ? "Not Found"
+                    : error
+                    ? "获取节点数据失败"
+                    : "暂无节点数据"}
+                </CardTitle>
+                <CardDescription>
+                  {hasSearchTerm
+                    ? "请尝试更改筛选条件"
+                    : error
+                    ? "获取节点数据失败，请重试"
+                    : "请先通过管理端添加节点"}
+                </CardDescription>
+              </CardHeader>
+              <CardFooter>
+                {hasSearchTerm ? (
                   <Button onClick={() => setSearchTerm("")} className="w-full">
                     清空搜索
                   </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          )}
-        </div>
-      </main>
+                ) : error ? (
+                  <Button
+                    onClick={() => void refreshNodes()}
+                    className="w-full">
+                    重试
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={() =>
+                      window.open("/admin", "_blank", "noopener,noreferrer")
+                    }
+                    className="w-full">
+                    添加节点
+                  </Button>
+                )}
+              </CardFooter>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
