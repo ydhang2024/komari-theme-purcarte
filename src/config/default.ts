@@ -7,10 +7,10 @@ export interface ConfigOptions {
   blurBackgroundColor: string; // 磨砂玻璃背景颜色
   enableTransparentTags: boolean; // 是否启用标签透明背景
   tagDefaultColorList: string; // 标签默认颜色列表
-  selectThemeColor: string; // 默认主题颜色
+  selectThemeColor: ColorType; // 默认主题颜色
   enableLocalStorage: boolean; // 是否启用本地存储
-  selectedDefaultView: "grid" | "table"; // 默认视图模式
-  selectedDefaultAppearance: "light" | "dark" | "system"; // 默认外观模式
+  selectedDefaultView: ViewModeType; // 默认视图模式
+  selectedDefaultAppearance: AppearanceType; // 默认外观模式
   statusCardsVisibility: string; // 状态卡片显示控制
   enableLogo: boolean; // 是否启用Logo
   logoUrl: string; // Logo图片URL
@@ -18,6 +18,7 @@ export interface ConfigOptions {
   titleText: string; // 标题文本
   enableSearchButton: boolean; // 是否启用搜索按钮
   enableAdminButton: boolean; // 是否启用管理员按钮
+  enableJsonRPC2Api: boolean; // 是否启用 JSON-RPC2 API 适配
   enableCompactMode: boolean; // 是否启用紧凑模式
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
@@ -53,6 +54,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   titleText: "Komari",
   enableSearchButton: true,
   enableAdminButton: true,
+  enableJsonRPC2Api: false,
   enableCompactMode: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
@@ -65,3 +67,65 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   selectTrafficProgressStyle: "linear",
   enableListItemProgressBar: true,
 };
+
+// 定义颜色类型
+export type ColorType =
+  | "ruby"
+  | "gray"
+  | "gold"
+  | "bronze"
+  | "brown"
+  | "yellow"
+  | "amber"
+  | "orange"
+  | "tomato"
+  | "red"
+  | "crimson"
+  | "pink"
+  | "plum"
+  | "purple"
+  | "violet"
+  | "iris"
+  | "indigo"
+  | "blue"
+  | "cyan"
+  | "teal"
+  | "jade"
+  | "green"
+  | "grass"
+  | "lime"
+  | "mint"
+  | "sky";
+export const allColors: ColorType[] = [
+  "ruby",
+  "gray",
+  "gold",
+  "bronze",
+  "brown",
+  "yellow",
+  "amber",
+  "orange",
+  "tomato",
+  "red",
+  "crimson",
+  "pink",
+  "plum",
+  "purple",
+  "violet",
+  "iris",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "jade",
+  "green",
+  "grass",
+  "lime",
+  "mint",
+  "sky",
+];
+
+export type AppearanceType = "light" | "dark" | "system";
+export const allAppearance: AppearanceType[] = ["light", "dark", "system"];
+
+export type ViewModeType = "grid" | "table";

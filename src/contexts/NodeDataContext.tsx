@@ -7,11 +7,11 @@ import {
   type ReactNode,
 } from "react";
 import { apiService } from "../services/api";
-import type { NodeData, HistoryRecord } from "../types/node";
+import type { NodeData } from "../types/node";
 
 // The core logic from the original useNodeData.ts, now kept internal to this file.
 function useNodesInternal() {
-  const [staticNodes, setStaticNodes] = useState<NodeData[] | "private">([]);
+  const [staticNodes, setStaticNodes] = useState<NodeData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,13 +21,8 @@ function useNodesInternal() {
 
     try {
       const nodeData = await apiService.getNodes();
-
-      if (nodeData === "private") {
-        setStaticNodes("private");
-      } else {
-        const sortedNodes = nodeData.sort((a, b) => a.weight - b.weight);
-        setStaticNodes(sortedNodes);
-      }
+      const sortedNodes = nodeData.sort((a, b) => a.weight - b.weight);
+      setStaticNodes(sortedNodes);
     } catch (err) {
       setError(err instanceof Error ? err.message : "获取节点数据失败");
     } finally {
@@ -84,29 +79,7 @@ function useNodesInternal() {
       const recentStats = await apiService.getNodeRecentStats(uuid);
       if (!recentStats) return null;
 
-      const records: HistoryRecord[] = recentStats.map((stat) => ({
-        client: uuid,
-        time: stat.updated_at,
-        cpu: stat.cpu.usage,
-        ram: stat.ram.used,
-        disk: stat.disk.used,
-        load: stat.load.load1,
-        net_in: stat.network.down,
-        net_out: stat.network.up,
-        process: stat.process,
-        connections: stat.connections.tcp + stat.connections.udp,
-        gpu: 0,
-        ram_total: stat.ram.total,
-        swap: stat.swap.used,
-        swap_total: stat.swap.total,
-        temp: 0,
-        disk_total: stat.disk.total,
-        net_total_up: stat.network.totalUp,
-        net_total_down: stat.network.totalDown,
-        connections_udp: stat.connections.udp,
-      }));
-
-      return { count: records.length, records };
+      return { count: recentStats.length, records: recentStats };
     } catch (err) {
       console.error("Failed to fetch recent load history:", err);
       return null;
@@ -115,21 +88,15 @@ function useNodesInternal() {
 
   const getNodesByGroup = useCallback(
     (group: string) => {
-      if (Array.isArray(staticNodes)) {
-        return staticNodes.filter((node) => node.group === group);
-      }
-      return [];
+      return staticNodes.filter((node) => node.group === group);
     },
     [staticNodes]
   );
 
   const getGroups = useCallback(() => {
-    if (Array.isArray(staticNodes)) {
-      return Array.from(
-        new Set(staticNodes.map((node) => node.group).filter(Boolean))
-      );
-    }
-    return [];
+    return Array.from(
+      new Set(staticNodes.map((node) => node.group).filter(Boolean))
+    );
   }, [staticNodes]);
 
   return {

@@ -62,7 +62,7 @@
 
 | 名称 | 配置项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
-| 背景图片链接 | `backgroundImage` | `string` | `/assets/Moonlit-Scenery.webp` | 目前仅支持单张背景图片（eg: https://test.com/1.png ） |
+| 背景图片链接 | `backgroundImage` | `string` | `/assets/Moonlit-Scenery.webp` | 目前支持单张背景图片或图片api，请自行测试（eg: https://test.com/1.png ） |
 | 启用视频背景 | `enableVideoBackground` | `switch` | `false` | 启用后将使用视频作为背景 |
 | 视频背景链接 | `videoBackgroundUrl` | `string` | `/assets/LanternRivers_1080p15fps2Mbps3s.mp4` | 视频背景链接（eg: https://test.com/1.mp4 ），建议使用无声视频，且视频文件较大时可能会影响加载速度 |
 | 启用磨砂玻璃效果 | `enableBlur` | `switch` | `true` | 启用后将使主要容器拥有磨砂玻璃效果 |
@@ -71,6 +71,9 @@
 | 启用标签透明背景 | `enableTransparentTags` | `switch` | `true` | 启用后标签将使用较为透明的背景色，当背景情况复杂导致标签难以辨识时建议关闭 |
 | 标签默认颜色列表 | `tagDefaultColorList` | `string` | `ruby,gray,gold,bronze,brown,yellow,amber,orange,tomato,red` | 标签默认颜色列表，展示的标签将按顺序调用该颜色池，逗号分隔（可用的颜色列表请参考：https://www.radix-ui.com/themes/docs/theme/color ，改完没有生效则说明填写有误） |
 | 默认主题颜色 | `selectThemeColor` | `select` | `violet` | 设置默认主题颜色，颜色对照请参考：https://www.radix-ui.com/themes/docs/theme/color |
+
+#### 浏览器本地存储配置
+
 | 启用 localStorage 配置 | `enableLocalStorage` | `switch` | `true` | 启用后将优先使用用户浏览器本地配置的视图和外观设置。关闭后将强制使用下方的主题配置，本地可调整但刷新即恢复 |
 | 默认展示视图 | `selectedDefaultView` | `select` | `grid` | 设置默认展示视图为网格或表格 |
 | 默认外观 | `selectedDefaultAppearance` | `select` | `system` | 设置默认外观为浅色、深色或系统主题 |
@@ -91,6 +94,7 @@
 
 | 名称 | 配置项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
+| 启用 JSON-RPC2 API 适配（实验性，未完全支持特性） | `enableJsonRPC2Api` | `switch` | `false` | 启用后将在支持的 Komari 版本（>=1.0.7）优先使用 JSON-RPC2 API 获取数据，以提升兼容性和性能，若出现问题请关闭此选项 |
 | 启用紧凑模式 | `enableCompactMode` | `switch` | `false` | 启用后将统计栏挪至标题栏，仅推荐在大屏设备上使用，手机端仅缩小字体和间距 |
 | 合并分组栏与统计栏 | `mergeGroupsWithStats` | `switch` | `false` | 启用后分组栏将合并到统计栏中，并以下拉菜单形式展示 |
 | 启用统计栏 | `enableStatsBar` | `switch` | `true` | 启用后默认显示统计栏 |
