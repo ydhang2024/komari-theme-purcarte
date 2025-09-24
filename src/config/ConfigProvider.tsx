@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import type { PublicInfo } from "@/types/node.d";
 import { ConfigContext } from "./ConfigContext";
 import { DEFAULT_CONFIG, type ConfigOptions } from "./default";
@@ -78,28 +78,6 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
     initialize();
   }, []);
 
-  const dynamicStyles = useMemo(() => {
-    if (!config) return "";
-
-    const { backgroundImage, blurValue, blurBackgroundColor } = config;
-    const styles: string[] = [];
-
-    styles.push(`--body-background-url: url(${backgroundImage});`);
-
-    styles.push(`--purcarte-blur: ${blurValue}px;`);
-
-    const colors = blurBackgroundColor.split("|").map((color) => color.trim());
-    if (colors.length >= 2) {
-      styles.push(`--card-light: ${colors[0]};`);
-      styles.push(`--card-dark: ${colors[1]};`);
-    } else if (colors.length === 1) {
-      styles.push(`--card-light: ${colors[0]};`);
-      styles.push(`--card-dark: ${colors[0]};`);
-    }
-
-    return `:root { ${styles.join(" ")} }`;
-  }, [config]);
-
   if (!isLoaded || !config) {
     return (
       <Loading text="加载配置中..." className={!loading ? "fade-out" : ""} />
@@ -108,8 +86,7 @@ export function ConfigProvider({ children }: ConfigProviderProps) {
 
   return (
     <ConfigContext.Provider value={{ ...config, publicSettings, siteStatus }}>
-      <style>{dynamicStyles}</style>
-      <div className="fade-in">{children}</div>
+      {children}
     </ConfigContext.Provider>
   );
 }

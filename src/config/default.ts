@@ -1,8 +1,10 @@
 // 配置类型定义
 export interface ConfigOptions {
-  backgroundImage: string; // 背景图片URL
+  backgroundImage: string; // 桌面端背景图片URL
+  backgroundImageMobile: string; // 移动端背景图片URL
   enableVideoBackground: boolean; // 是否启用视频背景
-  videoBackgroundUrl: string; // 视频背景URL
+  videoBackgroundUrl: string; // 桌面端视频背景URL
+  videoBackgroundUrlMobile: string; // 移动端视频背景URL
   blurValue: number; // 磨砂玻璃模糊值
   blurBackgroundColor: string; // 磨砂玻璃背景颜色
   enableTransparentTags: boolean; // 是否启用标签透明背景
@@ -35,8 +37,10 @@ export interface ConfigOptions {
 // 默认配置值
 export const DEFAULT_CONFIG: ConfigOptions = {
   backgroundImage: "/assets/Moonlit-Scenery.webp",
+  backgroundImageMobile: "",
   enableVideoBackground: false,
   videoBackgroundUrl: "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
+  videoBackgroundUrlMobile: "",
   blurValue: 10,
   blurBackgroundColor: "rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)",
   enableTransparentTags: true,

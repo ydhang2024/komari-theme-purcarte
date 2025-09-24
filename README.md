@@ -62,18 +62,22 @@
 
 | 名称 | 配置项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
-| 背景图片链接 | `backgroundImage` | `string` | `/assets/Moonlit-Scenery.webp` | 目前支持单张背景图片或图片api，请自行测试（eg: https://test.com/1.png ） |
+| 桌面端背景图片链接 | `backgroundImage` | `string` | `/assets/Moonlit-Scenery.webp` | 目前支持单张背景图片或图片api，使用“\|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，请自行测试（eg: `https://test.com/1.png`） |
+| 移动端背景图片链接 | `backgroundImageMobile` | `string` | &nbsp; | 移动端背景图片链接，与桌面端一样区分亮暗模式，留空则使用桌面端背景 |
 | 启用视频背景 | `enableVideoBackground` | `switch` | `false` | 启用后将使用视频作为背景 |
-| 视频背景链接 | `videoBackgroundUrl` | `string` | `/assets/LanternRivers_1080p15fps2Mbps3s.mp4` | 视频背景链接（eg: https://test.com/1.mp4 ），建议使用无声视频，且视频文件较大时可能会影响加载速度 |
+| 桌面端视频背景链接 | `videoBackgroundUrl` | `string` | `/assets/LanternRivers_1080p15fps2Mbps3s.mp4` | 视频背景链接（eg: `https://test.com/1.mp4`），使用“\|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，建议使用无声视频，且视频文件较大时可能会影响加载速度 |
+| 移动端视频背景链接 | `videoBackgroundUrlMobile` | `string` | &nbsp; | 移动端视频背景链接，与桌面端一样区分亮暗模式，留空则使用桌面端视频 |
 | 启用磨砂玻璃效果 | `enableBlur` | `switch` | `true` | 启用后将使主要容器拥有磨砂玻璃效果 |
 | 磨砂玻璃模糊值 | `blurValue` | `number` | `10` | 调整模糊值大小，数值越大模糊效果越明显，建议值为 5-20，为 0 则表示不启用模糊效果 |
-| 磨砂玻璃背景色 | `blurBackgroundColor` | `string` | `rgba(255, 255, 255, 0.5)\|rgba(0, 0, 0, 0.5)` | 调整模糊背景色，推荐 rgba 颜色值，使用“\|”分隔亮色模式和暗色模式的颜色值（eg: rgba(255, 255, 255, 0.5)\|rgba(0, 0, 0, 0.5)） |
+| 磨砂玻璃背景色 | `blurBackgroundColor` | `string` | `rgba(255, 255, 255, 0.5)\|rgba(0, 0, 0, 0.5)` | 调整模糊背景色，推荐 rgba 颜色值（eg: rgba(255, 255, 255, 0.5)\|rgba(0, 0, 0, 0.5)），使用“\|”分隔亮色模式和暗色模式的颜色值，填写单个则同时用于亮暗模式 |
 | 启用标签透明背景 | `enableTransparentTags` | `switch` | `true` | 启用后标签将使用较为透明的背景色，当背景情况复杂导致标签难以辨识时建议关闭 |
-| 标签默认颜色列表 | `tagDefaultColorList` | `string` | `ruby,gray,gold,bronze,brown,yellow,amber,orange,tomato,red` | 标签默认颜色列表，展示的标签将按顺序调用该颜色池，逗号分隔（可用的颜色列表请参考：https://www.radix-ui.com/themes/docs/theme/color ，改完没有生效则说明填写有误） |
-| 默认主题颜色 | `selectThemeColor` | `select` | `violet` | 设置默认主题颜色，颜色对照请参考：https://www.radix-ui.com/themes/docs/theme/color |
+| 标签默认颜色列表 | `tagDefaultColorList` | `string` | `ruby,gray,gold,bronze,brown,yellow,amber,orange,tomato,red` | 标签默认颜色列表，展示的标签将按顺序调用该颜色池，逗号分隔（可用的颜色列表请参考：[Radix Color](https://www.radix-ui.com/themes/docs/theme/color)，改完没有生效则说明填写有误） |
+| 默认主题颜色 | `selectThemeColor` | `select` | `violet` | 设置默认主题颜色，颜色对照请参考：[Radix Color](https://www.radix-ui.com/themes/docs/theme/color) |
 
 #### 浏览器本地存储配置
 
+| 名称 | 配置项 | 类型 | 默认值 | 说明 |
+| :--- | :--- | :--- | :--- | :--- |
 | 启用 localStorage 配置 | `enableLocalStorage` | `switch` | `true` | 启用后将优先使用用户浏览器本地配置的视图和外观设置。关闭后将强制使用下方的主题配置，本地可调整但刷新即恢复 |
 | 默认展示视图 | `selectedDefaultView` | `select` | `grid` | 设置默认展示视图为网格或表格 |
 | 默认外观 | `selectedDefaultAppearance` | `select` | `system` | 设置默认外观为浅色、深色或系统主题 |
@@ -84,7 +88,7 @@
 | 名称 | 配置项 | 类型 | 默认值 | 说明 |
 | :--- | :--- | :--- | :--- | :--- |
 | 启用标题栏左侧 Logo | `enableLogo` | `switch` | `false` | 启用后默认在标题栏左侧显示 Logo |
-| Logo 图片链接 | `logoUrl` | `string` | `/assets/logo.png` | Logo 图片链接（eg: https://test.com/logo.png） |
+| Logo 图片链接 | `logoUrl` | `string` | `/assets/logo.png` | Logo 图片链接（eg: `https://test.com/logo.png`） |
 | 启用标题栏标题 | `enableTitle` | `switch` | `true` | 启用后默认在顶栏左侧显示标题 |
 | 标题栏标题文本 | `titleText` | `string` | &nbsp; | 标题栏左侧显示的文本（留空则使用站点标题） |
 | 启用搜索按钮 | `enableSearchButton` | `switch` | `true` | 启用后默认在标题栏右侧显示搜索按钮 |
