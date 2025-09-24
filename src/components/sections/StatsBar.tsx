@@ -65,7 +65,7 @@ const StatChip = memo(
     isCompact: boolean;
     isMobile: boolean;
   }) => {
-    if (isCompact) {
+    if (isMobile || isCompact) {
       return (
         <div
           className={cn(
@@ -73,7 +73,7 @@ const StatChip = memo(
             isMobile ? "flex-col items-center" : "items-center gap-1.5"
           )}>
           <span
-            className="text-xs font-semibold uppercase tracking-[0.1em] text-secondary-foreground/60"
+            className="text-xs font-semibold text-secondary-foreground/60"
             style={!isMobile ? { writingMode: "vertical-rl" } : {}}>
             {label}
           </span>
@@ -89,7 +89,9 @@ const StatChip = memo(
     return (
       <div className="w-full py-1">
         <div className="flex flex-col gap-2">
-          <label className="text-secondary-foreground text-sm">{label}</label>
+          <label className="font-semibold text-secondary-foreground/60">
+            {label}
+          </label>
           <div className="font-medium -mt-2">
             {lines.length > 1 ? (
               <div className="flex flex-col items-center">
@@ -315,26 +317,35 @@ export const StatsBar = (props: StatsBarProps) => {
     );
   }
 
+  const getGridTemplateColumns = () => {
+    if (!isMobile) {
+      return "repeat(auto-fit, minmax(180px, 1fr))";
+    }
+    const visibleCount =
+      resolvedStats.length +
+      (displayOptions.currentTime ? 1 : 0) +
+      (enableGroupedBar && mergeGroupsWithStats ? 1 : 0);
+
+    return visibleCount >= 5 ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+  };
+
   // 默认卡片模式
   return (
     <>
       <div
-        className={`purcarte-blur theme-card-style relative flex items-center text-sm text-secondary-foreground my-4 ${
-          layoutIsMobile ? "p-2" : "px-4 min-w-[300px] min-h-[5rem]"
+        className={`purcarte-blur theme-card-style relative flex items-center text-secondary-foreground my-4 ${
+          layoutIsMobile
+            ? "text-xs p-2"
+            : "text-sm px-4 min-w-[300px] min-h-[5rem]"
         }`}>
         <div
           className="grid w-full gap-2 text-center items-center py-3"
           style={{
-            gridTemplateColumns: isMobile
-              ? "repeat(2, 1fr)"
-              : "repeat(auto-fit, minmax(180px, 1fr))",
+            gridTemplateColumns: getGridTemplateColumns(),
             gridAutoRows: "min-content",
           }}>
           {enableGroupedBar && mergeGroupsWithStats && (
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-secondary-foreground/60">
-                分组
-              </span>
+            <div className="flex flex-col items-center">
               <GroupSelector
                 groups={groups}
                 selectedGroup={selectedGroup}
