@@ -1,26 +1,24 @@
 import { useMemo } from "react";
-import { useLiveData } from "@/contexts/LiveDataContext";
 import { formatPrice } from "@/utils";
 import type { NodeData } from "@/types/node";
 
-export const useNodeCommons = (node: NodeData) => {
-  const { liveData } = useLiveData();
-  const stats = liveData ? liveData[node.uuid] : undefined;
+export const useNodeCommons = (node: NodeData & { stats?: any }) => {
+  const { stats } = node;
   const isOnline = stats ? stats.online : false;
   const price = formatPrice(node.price, node.currency, node.billing_cycle);
 
   const cpuUsage = stats && isOnline ? stats.cpu : 0;
   const memUsage =
-    stats && isOnline && stats.ram_total > 0
-      ? (stats.ram / stats.ram_total) * 100
+    stats && isOnline && node.mem_total > 0
+      ? (stats.ram / node.mem_total) * 100
       : 0;
   const swapUsage =
-    stats && isOnline && stats.swap_total > 0
-      ? (stats.swap / stats.swap_total) * 100
+    stats && isOnline && node.swap_total > 0
+      ? (stats.swap / node.swap_total) * 100
       : 0;
   const diskUsage =
-    stats && isOnline && stats.disk_total > 0
-      ? (stats.disk / stats.disk_total) * 100
+    stats && isOnline && node.disk_total > 0
+      ? (stats.disk / node.disk_total) * 100
       : 0;
 
   const load =
@@ -30,12 +28,13 @@ export const useNodeCommons = (node: NodeData) => {
         )} | ${stats.load15.toFixed(2)}`
       : "N/A";
 
-  const daysLeft = node.expired_at
-    ? Math.ceil(
-        (new Date(node.expired_at).getTime() - new Date().getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    : null;
+  const daysLeft =
+    node.expired_at && new Date(node.expired_at).getTime() > 0
+      ? Math.ceil(
+          (new Date(node.expired_at).getTime() - new Date().getTime()) /
+            (1000 * 60 * 60 * 24)
+        )
+      : null;
 
   let daysLeftTag = null;
   if (daysLeft !== null) {
@@ -55,7 +54,7 @@ export const useNodeCommons = (node: NodeData) => {
   const expired_at =
     daysLeft !== null && daysLeft > 36500
       ? "长期"
-      : node.expired_at
+      : node.expired_at && new Date(node.expired_at).getTime() > 0
       ? new Date(node.expired_at).toLocaleDateString()
       : "未设置";
 
