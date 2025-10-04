@@ -8,19 +8,60 @@ import { useNodeCommons } from "@/hooks/useNodeCommons";
 import { CircleProgress } from "../ui/progress-circle";
 import { ProgressBar } from "../ui/progress-bar";
 
-interface NodeListItemProps {
+interface NodeTableProps {
+  nodes: NodeData[];
+  enableSwap: boolean;
+  enableListItemProgressBar: boolean;
+  selectTrafficProgressStyle: "circular" | "linear";
+}
+
+export const NodeTable = ({
+  nodes,
+  enableSwap,
+  enableListItemProgressBar,
+  selectTrafficProgressStyle,
+}: NodeTableProps) => {
+  const gridCols = enableSwap ? "grid-cols-9" : "grid-cols-8";
+
+  return (
+    <div className="space-y-2">
+      <div
+        className={`text-primary font-bold grid ${gridCols} text-center shadow-sm shadow-(color:--accent-4)/50 gap-4 p-2 items-center rounded-lg bg-card transition-colors duration-200`}>
+        <div className="col-span-2">节点名称</div>
+        <div className="col-span-1">CPU</div>
+        <div className="col-span-1">内存</div>
+        {enableSwap && <div className="col-span-1">SWAP</div>}
+        <div className="col-span-1">硬盘</div>
+        <div className="col-span-1">网络</div>
+        <div className="col-span-1">流量</div>
+        <div className="col-span-1">负载</div>
+      </div>
+      {nodes.map((node) => (
+        <NodeTableRow
+          key={node.uuid}
+          node={node}
+          enableSwap={enableSwap}
+          enableListItemProgressBar={enableListItemProgressBar}
+          selectTrafficProgressStyle={selectTrafficProgressStyle}
+        />
+      ))}
+    </div>
+  );
+};
+
+interface NodeTableRowProps {
   node: NodeData;
   enableSwap: boolean;
   enableListItemProgressBar: boolean;
   selectTrafficProgressStyle: "circular" | "linear";
 }
 
-export const NodeListItem = ({
+const NodeTableRow = ({
   node,
   enableSwap,
   enableListItemProgressBar,
   selectTrafficProgressStyle,
-}: NodeListItemProps) => {
+}: NodeTableRowProps) => {
   const {
     stats,
     isOnline,
@@ -33,8 +74,7 @@ export const NodeListItem = ({
     expired_at,
     trafficPercentage,
   } = useNodeCommons(node);
-
-  const gridCols = enableSwap ? "grid-cols-10" : "grid-cols-9";
+  const gridCols = enableSwap ? "grid-cols-9" : "grid-cols-8";
 
   return (
     <div
@@ -45,20 +85,15 @@ export const NodeListItem = ({
       } text-secondary-foreground transition-colors duration-200`}>
       <div className="col-span-2 flex items-center text-left">
         <Flag flag={node.region} />
-        <div className="ml-2 w-[85%]">
+        <div className="ml-2 w-[85%] space-y-1">
           <Link to={`/instance/${node.uuid}`}>
             <div className="text-base font-bold">{node.name}</div>
           </Link>
           <Tag className="text-xs" tags={tagList} />
           <div className="flex text-xs">
             <span className="text-secondary-foreground">
-              到期：{expired_at}
-            </span>
-          </div>
-          <div className="flex text-xs">
-            <span className="text-secondary-foreground">
               {isOnline && stats
-                ? `在线：${formatUptime(stats.uptime)}`
+                ? `${expired_at} | ${formatUptime(stats.uptime)}`
                 : "离线"}
             </span>
           </div>
@@ -134,33 +169,28 @@ export const NodeListItem = ({
           )}
         </div>
       </div>
-      <div className="col-span-1">
+      <div className="col-span-1 text-left">
         <div>↑ {stats ? formatBytes(stats.net_out, true) : "N/A"}</div>
         <div>↓ {stats ? formatBytes(stats.net_in, true) : "N/A"}</div>
       </div>
-      <div className="col-span-2">
+      <div className="col-span-1 text-left">
         {selectTrafficProgressStyle === "linear" && isOnline && stats ? (
-          <div className="flex flex-col items-center">
-            <div className="w-full flex justify-center items-center">
-              <span>
-                {stats
-                  ? `↑ ${formatBytes(stats.net_total_up)} ↓ ${formatBytes(
-                      stats.net_total_down
-                    )}`
-                  : "N/A"}
-              </span>
+          <div className="flex flex-col">
+            <div>
+              <div>↑ {stats ? formatBytes(stats.net_total_up) : "N/A"}</div>
+              <div>↓ {stats ? formatBytes(stats.net_total_down) : "N/A"}</div>
             </div>
             {node.traffic_limit !== 0 && isOnline && stats && (
               <>
-                <div className="w-[80%] flex items-center gap-1 mt-1">
+                <div className="w-[80%] flex items-center gap-1">
                   <ProgressBar value={trafficPercentage} h="h-2" />
                   <span className="text-right text-xs">
                     {node.traffic_limit !== 0
                       ? `${trafficPercentage.toFixed(0)}%`
-                      : "OFF"}
+                      : ""}
                   </span>
                 </div>
-                <div className="text-xs text-secondary-foreground mt-1">
+                <div className="text-xs text-secondary-foreground">
                   {formatTrafficLimit(
                     node.traffic_limit,
                     node.traffic_limit_type
@@ -170,22 +200,8 @@ export const NodeListItem = ({
             )}
           </div>
         ) : (
-          <div className="flex items-center justify-around">
-            {node.traffic_limit !== 0 && isOnline && stats && (
-              <div className="flex items-center justify-center w-1/3">
-                <CircleProgress
-                  value={trafficPercentage}
-                  maxValue={100}
-                  size={32}
-                  strokeWidth={4}
-                  showPercentage={true}
-                />
-              </div>
-            )}
-            <div
-              className={
-                node.traffic_limit !== 0 ? "w-2/3 text-left" : "w-full"
-              }>
+          <div className="flex items-center justify-between">
+            <div>
               <div>
                 <div>↑ {stats ? formatBytes(stats.net_total_up) : "N/A"}</div>
                 <div>↓ {stats ? formatBytes(stats.net_total_down) : "N/A"}</div>
@@ -199,6 +215,17 @@ export const NodeListItem = ({
                 </div>
               )}
             </div>
+            {node.traffic_limit !== 0 && isOnline && stats && (
+              <div>
+                <CircleProgress
+                  value={trafficPercentage}
+                  maxValue={100}
+                  size={32}
+                  strokeWidth={4}
+                  showPercentage={true}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

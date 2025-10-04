@@ -14,17 +14,17 @@ import { useNodeCommons } from "@/hooks/useNodeCommons";
 import { ProgressBar } from "../ui/progress-bar";
 import { CircleProgress } from "../ui/progress-circle";
 
-interface NodeCardProps {
+interface NodeGridProps {
   node: NodeData;
   enableSwap: boolean;
   selectTrafficProgressStyle: "circular" | "linear";
 }
 
-export const NodeCard = ({
+export const NodeGrid = ({
   node,
   enableSwap,
   selectTrafficProgressStyle,
-}: NodeCardProps) => {
+}: NodeGridProps) => {
   const {
     stats,
     isOnline,

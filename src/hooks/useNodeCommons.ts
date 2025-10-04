@@ -55,7 +55,11 @@ export const useNodeCommons = (node: NodeData & { stats?: any }) => {
     daysLeft !== null && daysLeft > 36500
       ? "长期"
       : node.expired_at && new Date(node.expired_at).getTime() > 0
-      ? new Date(node.expired_at).toLocaleDateString()
+      ? new Date(node.expired_at).toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
       : "未设置";
 
   const tagList = [

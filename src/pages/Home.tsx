@@ -1,9 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { StatsBar } from "@/components/sections/StatsBar";
-import { NodeCard } from "@/components/sections/NodeCard";
-import { NodeListHeader } from "@/components/sections/NodeListHeader";
-import { NodeListItem } from "@/components/sections/NodeListItem";
+import { NodeGrid } from "@/components/sections/NodeGrid";
+import { NodeTable } from "@/components/sections/NodeTable";
 import Loading from "@/components/loading";
 import type { NodeData } from "@/types/node";
 import { useNodeData } from "@/contexts/NodeDataContext";
@@ -207,7 +206,7 @@ const HomePage: React.FC<HomePageProps> = ({
           viewMode === "grid" ? (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
               {filteredNodes.map((node) => (
-                <NodeCard
+                <NodeGrid
                   key={node.uuid}
                   node={node}
                   enableSwap={enableSwap}
@@ -220,19 +219,15 @@ const HomePage: React.FC<HomePageProps> = ({
               className="purcarte-blur theme-card-style w-full"
               viewportProps={{ className: "p-2" }}
               showHorizontalScrollbar>
-              <div className="space-y-2 min-w-[1080px]">
+              <div className="min-w-[1080px]">
                 {viewMode === "table" && (
-                  <NodeListHeader enableSwap={enableSwap} />
-                )}
-                {filteredNodes.map((node) => (
-                  <NodeListItem
-                    key={node.uuid}
-                    node={node}
+                  <NodeTable
+                    nodes={filteredNodes}
                     enableSwap={enableSwap}
                     enableListItemProgressBar={enableListItemProgressBar}
                     selectTrafficProgressStyle={selectTrafficProgressStyle}
                   />
-                ))}
+                )}
               </div>
             </ScrollArea>
           )
