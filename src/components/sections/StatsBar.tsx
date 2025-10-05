@@ -77,7 +77,7 @@ const StatChip = memo(
           )}>
           <div
             className={cn(
-              "text-xs font-semibold text-secondary-foreground",
+              "text-xs font-semibold",
               isMobile ? "" : "tracking-widest "
             )}
             style={
@@ -97,10 +97,8 @@ const StatChip = memo(
     return (
       <div className="w-full py-1">
         <div className="flex flex-col gap-2">
-          <label className="font-semibold text-secondary-foreground">
-            {label}
-          </label>
-          <div className="font-medium -mt-2">
+          <label className="font-semibold">{label}</label>
+          <div className="font-medium -mt-2 text-secondary-foreground">
             {lines.length > 1 ? (
               <div className="flex flex-col items-center">
                 {lines.map((line, index) => (
@@ -204,7 +202,7 @@ const GroupSelector = memo(
           <Button
             variant="secondary"
             size="sm"
-            className="h-7 shrink-0 rounded-full px-2 text-xs font-semibold text-secondary-foreground">
+            className="h-7 shrink-0 rounded-full px-2 text-xs font-semibold">
             <Layers className="mr-1.5 h-3.5 w-3.5" />
             {selectedGroup}
           </Button>
@@ -344,7 +342,7 @@ export const StatsBar = (props: StatsBarProps) => {
   return (
     <>
       <div
-        className={`purcarte-blur theme-card-style relative flex items-center text-secondary-foreground my-4 ${
+        className={`purcarte-blur theme-card-style relative flex items-center text-primary my-4 ${
           isMobile ? "text-xs p-2" : "text-sm px-4 min-w-[300px] min-h-[5rem]"
         }`}>
         <div
@@ -373,7 +371,7 @@ export const StatsBar = (props: StatsBarProps) => {
               ))}
             </>
           ) : (
-            <span className="text-xs text-secondary-foreground/60">
+            <span className="text-xs text-secondary-foreground">
               统计信息已隐藏
             </span>
           )}

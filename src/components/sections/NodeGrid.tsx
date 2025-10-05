@@ -70,27 +70,21 @@ export const NodeGrid = ({
           <div className="flex items-center justify-around whitespace-nowrap">
             <div className="flex items-center gap-1">
               <CpuIcon className="size-4 text-blue-600 flex-shrink-0" />
-              <span className="text-secondary-foreground">
-                {node.cpu_cores} Cores
-              </span>
+              <span>{node.cpu_cores} Cores</span>
             </div>
             <div className="flex items-center gap-1">
               <MemoryStickIcon className="size-4 text-green-600 flex-shrink-0" />
-              <span className="text-secondary-foreground">
-                {formatBytes(node.mem_total)}
-              </span>
+              <span>{formatBytes(node.mem_total)}</span>
             </div>
             <div className="flex items-center gap-1">
               <HardDriveIcon className="size-4 text-red-600 flex-shrink-0" />
-              <span className="text-secondary-foreground">
-                {formatBytes(node.disk_total)}
-              </span>
+              <span>{formatBytes(node.disk_total)}</span>
             </div>
           </div>
         )}
         <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
           <div className="flex items-center justify-between">
-            <span className="text-secondary-foreground">CPU</span>
+            <span>CPU</span>
             <div className="w-3/4 flex items-center gap-2">
               <ProgressBar value={cpuUsage} />
               <span className="w-12 text-right">{cpuUsage.toFixed(0)}%</span>
@@ -104,7 +98,7 @@ export const NodeGrid = ({
         </div>
         <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
           <div className="flex items-center justify-between">
-            <span className="text-secondary-foreground">内存</span>
+            <span>内存</span>
             <div className="w-3/4 flex items-center gap-2">
               <ProgressBar value={memUsage} />
               <span className="w-12 text-right">{memUsage.toFixed(0)}%</span>
@@ -122,7 +116,7 @@ export const NodeGrid = ({
         {enableSwap && (
           <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
             <div className="flex items-center justify-between">
-              <span className="text-secondary-foreground">SWAP</span>
+              <span>SWAP</span>
               <div className="w-3/4 flex items-center gap-2">
                 <ProgressBar value={swapUsage} />
                 {node.swap_total > 0 ? (
@@ -148,7 +142,7 @@ export const NodeGrid = ({
         )}
         <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
           <div className="flex items-center justify-between">
-            <span className="text-secondary-foreground">硬盘</span>
+            <span>硬盘</span>
             <div className="w-3/4 flex items-center gap-2">
               <ProgressBar value={diskUsage} />
               <span className="w-12 text-right">{diskUsage.toFixed(0)}%</span>
@@ -168,7 +162,7 @@ export const NodeGrid = ({
         {selectTrafficProgressStyle === "linear" && stats && (
           <div className="mb-1">
             <div className="flex items-center justify-between">
-              <span className="text-secondary-foreground">流量</span>
+              <span>流量</span>
               <div className="w-3/4 flex items-center gap-2">
                 <ProgressBar value={trafficPercentage} />
                 <span className="w-12 text-right">
@@ -197,7 +191,7 @@ export const NodeGrid = ({
         )}
         <div className="border-t border-(--accent-4)/50 my-2"></div>
         <div className="flex justify-between text-xs">
-          <span className="text-secondary-foreground">网络：</span>
+          <span>网络：</span>
           <div>
             <span>↑ {stats ? formatBytes(stats.net_out, true) : "N/A"}</span>
             <span className="ml-2">
@@ -207,7 +201,7 @@ export const NodeGrid = ({
         </div>
         {selectTrafficProgressStyle === "circular" && stats && (
           <div className="flex items-center justify-between text-xs">
-            <span className="text-secondary-foreground w-1/5">流量</span>
+            <span className="w-1/5">流量</span>
             <div className="flex items-center justify-between w-4/5">
               <div className="flex items-center w-1/4">
                 {node.traffic_limit !== 0 && (
@@ -242,18 +236,16 @@ export const NodeGrid = ({
           </div>
         )}
         <div className="flex justify-between text-xs">
-          <span className="text-secondary-foreground">负载</span>
+          <span>负载</span>
           <span>{load}</span>
         </div>
         <div className="flex justify-between text-xs">
           <div className="flex justify-start w-full">
-            <span className="text-secondary-foreground">
-              到期：{expired_at}
-            </span>
+            <span>到期：{expired_at}</span>
           </div>
           <div className="border-l border-(--accent-4)/50 mx-2"></div>
           <div className="flex justify-end w-full">
-            <span className="text-secondary-foreground">
+            <span>
               {isOnline && stats
                 ? `在线：${formatUptime(stats.uptime)}`
                 : "离线"}

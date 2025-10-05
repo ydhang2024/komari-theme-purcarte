@@ -82,7 +82,7 @@ const NodeTableRow = ({
         isOnline
           ? ""
           : "striped-bg-red-translucent-diagonal ring-2 ring-red-500/50"
-      } text-secondary-foreground transition-colors duration-200`}>
+      } text-primary transition-colors duration-200`}>
       <div className="col-span-2 flex items-center text-left">
         <Flag flag={node.region} />
         <div className="ml-2 w-[85%] space-y-1">
@@ -91,7 +91,7 @@ const NodeTableRow = ({
           </Link>
           <Tag className="text-xs" tags={tagList} />
           <div className="flex text-xs">
-            <span className="text-secondary-foreground">
+            <span>
               {isOnline && stats
                 ? `${expired_at} | ${formatUptime(stats.uptime)}`
                 : "离线"}

@@ -187,7 +187,7 @@ const HomePage: React.FC<HomePageProps> = ({
       )}
 
       {enableGroupedBar && !mergeGroupsWithStats && (
-        <div className="flex purcarte-blur theme-card-style overflow-auto whitespace-nowrap overflow-x-auto items-center min-w-[300px] text-secondary-foreground space-x-4 px-4 my-4">
+        <div className="flex purcarte-blur theme-card-style overflow-auto whitespace-nowrap overflow-x-auto items-center min-w-[300px] text-primary space-x-4 px-4 my-4">
           <span>分组</span>
           {groups?.map((group: string) => (
             <Button
