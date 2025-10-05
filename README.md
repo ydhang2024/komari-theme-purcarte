@@ -206,6 +206,16 @@
   - **默认值:** `true`
   - **说明:** 启用后默认显示 SWAP 信息
 
+- **是否在卡片中显示硬件信息栏** (`isShowHWBarInCard`)
+  - **类型:** `switch`
+  - **默认值:** `true`
+  - **说明:** 启用后将在节点卡片中标题栏之下显示硬件信息栏（CPU、内存和硬盘总量）
+
+- **是否在流量进度条下方显示数值** (`isShowValueUnderProgressBar`)
+  - **类型:** `switch`
+  - **默认值:** `false`
+  - **说明:** 启用后将在内存、SWAP、硬盘占用情况进度条下方显示实际占用数值
+
 - **流量进度条样式** (`selectTrafficProgressStyle`)
   - **类型:** `select`
   - **默认值:** `circular`

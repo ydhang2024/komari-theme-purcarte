@@ -13,6 +13,7 @@ import { Tag } from "../ui/tag";
 import { useNodeCommons } from "@/hooks/useNodeCommons";
 import { ProgressBar } from "../ui/progress-bar";
 import { CircleProgress } from "../ui/progress-circle";
+import { useAppConfig } from "@/config";
 
 interface NodeGridProps {
   node: NodeData;
@@ -37,6 +38,7 @@ export const NodeGrid = ({
     expired_at,
     trafficPercentage,
   } = useNodeCommons(node);
+  const { isShowHWBarInCard, isShowValueUnderProgressBar } = useAppConfig();
 
   return (
     <Card
@@ -64,62 +66,107 @@ export const NodeGrid = ({
           <Tag tags={tagList} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-2"></div>
-        <div className="flex items-center justify-around whitespace-nowrap">
-          <div className="flex items-center gap-1">
-            <CpuIcon className="size-4 text-blue-600 flex-shrink-0" />
-            <span className="text-secondary-foreground">
-              {node.cpu_cores} Cores
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <MemoryStickIcon className="size-4 text-green-600 flex-shrink-0" />
-            <span className="text-secondary-foreground">
-              {formatBytes(node.mem_total)}
-            </span>
-          </div>
-          <div className="flex items-center gap-1">
-            <HardDriveIcon className="size-4 text-red-600 flex-shrink-0" />
-            <span className="text-secondary-foreground">
-              {formatBytes(node.disk_total)}
-            </span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-secondary-foreground">CPU</span>
-          <div className="w-3/4 flex items-center gap-2">
-            <ProgressBar value={cpuUsage} />
-            <span className="w-12 text-right">{cpuUsage.toFixed(0)}%</span>
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-secondary-foreground">内存</span>
-          <div className="w-3/4 flex items-center gap-2">
-            <ProgressBar value={memUsage} />
-            <span className="w-12 text-right">{memUsage.toFixed(0)}%</span>
-          </div>
-        </div>
-        {enableSwap && (
-          <div className="flex items-center justify-between">
-            <span className="text-secondary-foreground">SWAP</span>
-            <div className="w-3/4 flex items-center gap-2">
-              <ProgressBar value={swapUsage} />
-              {node.swap_total > 0 ? (
-                <span className="w-12 text-right">{swapUsage.toFixed(0)}%</span>
-              ) : (
-                <span className="w-12 text-right">OFF</span>
-              )}
+        {isShowHWBarInCard && (
+          <div className="flex items-center justify-around whitespace-nowrap">
+            <div className="flex items-center gap-1">
+              <CpuIcon className="size-4 text-blue-600 flex-shrink-0" />
+              <span className="text-secondary-foreground">
+                {node.cpu_cores} Cores
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <MemoryStickIcon className="size-4 text-green-600 flex-shrink-0" />
+              <span className="text-secondary-foreground">
+                {formatBytes(node.mem_total)}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <HardDriveIcon className="size-4 text-red-600 flex-shrink-0" />
+              <span className="text-secondary-foreground">
+                {formatBytes(node.disk_total)}
+              </span>
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between">
-          <span className="text-secondary-foreground">硬盘</span>
-          <div className="w-3/4 flex items-center gap-2">
-            <ProgressBar value={diskUsage} />
-            <span className="w-12 text-right">{diskUsage.toFixed(0)}%</span>
+        <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
+          <div className="flex items-center justify-between">
+            <span className="text-secondary-foreground">CPU</span>
+            <div className="w-3/4 flex items-center gap-2">
+              <ProgressBar value={cpuUsage} />
+              <span className="w-12 text-right">{cpuUsage.toFixed(0)}%</span>
+            </div>
           </div>
+          {isShowValueUnderProgressBar && (
+            <div className="flex text-xs items-center justify-between text-secondary-foreground">
+              <span>{node.cpu_cores} Cores</span>
+            </div>
+          )}
         </div>
-        {selectTrafficProgressStyle === "linear" && isOnline && stats && (
-          <div>
+        <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
+          <div className="flex items-center justify-between">
+            <span className="text-secondary-foreground">内存</span>
+            <div className="w-3/4 flex items-center gap-2">
+              <ProgressBar value={memUsage} />
+              <span className="w-12 text-right">{memUsage.toFixed(0)}%</span>
+            </div>
+          </div>
+          {isShowValueUnderProgressBar && (
+            <div className="flex text-xs items-center justify-between text-secondary-foreground">
+              <span>
+                {node.mem_total > 0 ? `${formatBytes(node.mem_total)}` : "N/A"}
+              </span>
+              <span>{stats ? `${formatBytes(stats.ram)}` : "N/A"}</span>
+            </div>
+          )}
+        </div>
+        {enableSwap && (
+          <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-secondary-foreground">SWAP</span>
+              <div className="w-3/4 flex items-center gap-2">
+                <ProgressBar value={swapUsage} />
+                {node.swap_total > 0 ? (
+                  <span className="w-12 text-right">
+                    {swapUsage.toFixed(0)}%
+                  </span>
+                ) : (
+                  <span className="w-12 text-right">OFF</span>
+                )}
+              </div>
+            </div>
+            {isShowValueUnderProgressBar && (
+              <div className="flex text-xs items-center justify-between text-secondary-foreground">
+                <span>
+                  {node.swap_total > 0
+                    ? `${formatBytes(node.swap_total)}`
+                    : "未启用"}
+                </span>
+                <span>{stats ? `${formatBytes(stats.swap)}` : "N/A"}</span>
+              </div>
+            )}
+          </div>
+        )}
+        <div className={`${isShowValueUnderProgressBar ? "mb-1" : ""}`}>
+          <div className="flex items-center justify-between">
+            <span className="text-secondary-foreground">硬盘</span>
+            <div className="w-3/4 flex items-center gap-2">
+              <ProgressBar value={diskUsage} />
+              <span className="w-12 text-right">{diskUsage.toFixed(0)}%</span>
+            </div>
+          </div>
+          {isShowValueUnderProgressBar && (
+            <div className="flex text-xs items-center justify-between text-secondary-foreground">
+              <span>
+                {node.disk_total > 0
+                  ? `${formatBytes(node.disk_total)}`
+                  : "N/A"}
+              </span>
+              <span>{stats ? `${formatBytes(stats.disk)}` : "N/A"}</span>
+            </div>
+          )}
+        </div>
+        {selectTrafficProgressStyle === "linear" && stats && (
+          <div className="mb-1">
             <div className="flex items-center justify-between">
               <span className="text-secondary-foreground">流量</span>
               <div className="w-3/4 flex items-center gap-2">
@@ -158,7 +205,7 @@ export const NodeGrid = ({
             </span>
           </div>
         </div>
-        {selectTrafficProgressStyle === "circular" && isOnline && stats && (
+        {selectTrafficProgressStyle === "circular" && stats && (
           <div className="flex items-center justify-between text-xs">
             <span className="text-secondary-foreground w-1/5">流量</span>
             <div className="flex items-center justify-between w-4/5">

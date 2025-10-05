@@ -226,6 +226,20 @@
                 "help": "启用后默认显示 SWAP 信息"
             },
             {
+                "key": "isShowHWBarInCard",
+                "name": "是否在卡片中显示硬件信息栏",
+                "type": "switch",
+                "default": true,
+                "help": "启用后将在节点卡片中标题栏之下显示硬件信息栏（CPU、内存和硬盘总量）"
+            },
+            {
+                "key": "isShowValueUnderProgressBar",
+                "name": "是否在流量进度条下方显示数值",
+                "type": "switch",
+                "default": false,
+                "help": "启用后将在内存、SWAP、硬盘占用情况进度条下方显示实际占用数值"
+            },
+            {
                 "key": "selectTrafficProgressStyle",
                 "name": "流量进度条样式",
                 "type": "select",
