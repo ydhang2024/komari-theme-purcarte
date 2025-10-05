@@ -102,7 +102,7 @@ export const AppContent = () => {
                         className="h-full"
                         viewportRef={homeViewportRef}
                         viewportProps={{ onScroll: handleHomeScroll }}>
-                        <main className="w-[90dvw] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <HomePage
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
@@ -118,7 +118,7 @@ export const AppContent = () => {
                       <ScrollArea
                         className="h-full"
                         viewportRef={instanceViewportRef}>
-                        <main className="w-[90%] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <InstancePage />
                         </main>
                       </ScrollArea>
@@ -128,7 +128,7 @@ export const AppContent = () => {
                     path="*"
                     element={
                       <ScrollArea className="h-full">
-                        <main className="w-[90%] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <NotFoundPage />
                         </main>
                       </ScrollArea>

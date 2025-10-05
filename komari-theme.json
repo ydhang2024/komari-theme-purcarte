@@ -14,6 +14,13 @@
                 "type": "title"
             },
             {
+                "key": "mainWidth",
+                "name": "主要内容宽度",
+                "type": "number",
+                "default": 85,
+                "help": "调整主要内容的最大宽度，单位为视口宽度的百分比（vw），建议值为 80-90"
+            },
+            {
                 "key": "backgroundImage",
                 "name": "桌面端背景图片链接",
                 "type": "string",

@@ -58,7 +58,7 @@ export const Header = (props: HeaderProps) => {
 
   return (
     <header className="purcarte-blur border-b border-(--accent-a4) shadow-sm shadow-(color:--accent-a4) sticky top-0 flex items-center justify-center z-10">
-      <div className="w-[90%] max-w-screen-2xl py-2 flex items-center justify-between">
+      <div className="w-(--main-width) max-w-screen-2xl py-2 flex items-center justify-between">
         <div className="flex items-center theme-text-shadow text-accent-foreground">
           <a href="/" className="flex items-center gap-2 text-2xl font-bold">
             {enableLogo && logoUrl && (

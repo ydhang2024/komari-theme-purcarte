@@ -38,9 +38,10 @@ export function DynamicContent({ children }: { children: ReactNode }) {
 
   const dynamicStyles = useMemo(() => {
     if (!config) return "";
-    const { blurValue, blurBackgroundColor } = config;
+    const { mainWidth, blurValue, blurBackgroundColor } = config;
     const styles: string[] = [];
 
+    styles.push(`--main-width: ${mainWidth}vw;`);
     styles.push(`--body-background-url: url(${imageUrl});`);
     styles.push(`--purcarte-blur: ${blurValue}px;`);
 
