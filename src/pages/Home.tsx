@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useCompactLayout } from "@/hooks/useCompactLayout";
+import { useIsMobile } from "@/hooks/useMobile";
 
 interface HomePageProps {
   searchTerm: string;
@@ -55,7 +55,7 @@ const HomePage: React.FC<HomePageProps> = ({
     enableSwap,
     enableListItemProgressBar,
     selectTrafficProgressStyle,
-    enableCompactMode,
+    isShowStatsInHeader,
     mergeGroupsWithStats,
   } = useAppConfig();
   const combinedNodes = useMemo(() => {
@@ -71,7 +71,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   const groups = useMemo(() => ["所有", ...getGroups()], [getGroups]);
 
-  const { layoutIsMobile } = useCompactLayout(enableCompactMode);
+  const isMobile = useIsMobile();
 
   const filteredNodes = useMemo(() => {
     return combinedNodes
@@ -172,13 +172,13 @@ const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="fade-in">
-      {enableStatsBar && (!enableCompactMode || layoutIsMobile) && (
+      {enableStatsBar && (!isShowStatsInHeader || isMobile) && (
         <StatsBar
           displayOptions={statusCardsVisibility}
           setDisplayOptions={setStatusCardsVisibility}
           stats={stats}
           loading={loading}
-          enableCompactMode={enableCompactMode}
+          isShowStatsInHeader={isShowStatsInHeader}
           enableGroupedBar={enableGroupedBar}
           groups={groups}
           selectedGroup={selectedGroup}

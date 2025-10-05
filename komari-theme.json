@@ -184,11 +184,11 @@
                 "help": "启用后将在支持的 Komari 版本（>=1.0.7）优先使用 JSON-RPC2 API 获取数据，以提升兼容性和性能，若出现问题请关闭此选项"
             },
             {
-                "key": "enableCompactMode",
-                "name": "启用紧凑模式",
+                "key": "isShowStatsInHeader",
+                "name": "是否在标题栏中显示统计信息",
                 "type": "switch",
                 "default": false,
-                "help": "启用后将统计栏挪至标题栏，仅推荐在大屏设备上使用，手机端仅缩小字体和间距"
+                "help": "启用后将在标题栏中显示统计信息，仅在大屏桌面端有效，当标题栏空间不足时将恢复原统计栏位置"
             },
             {
                 "key": "mergeGroupsWithStats",

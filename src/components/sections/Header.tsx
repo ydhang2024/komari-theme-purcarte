@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAppConfig } from "@/config";
 import { useTheme } from "@/hooks/useTheme";
-import { useCompactLayout } from "@/hooks/useCompactLayout";
+import { useIsMobile } from "@/hooks/useMobile";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,9 +46,9 @@ export const Header = (props: HeaderProps) => {
     logoUrl,
     enableSearchButton,
     enableAdminButton,
-    enableCompactMode,
+    isShowStatsInHeader,
   } = useAppConfig();
-  const { isMobile, layoutIsMobile } = useCompactLayout(enableCompactMode);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (titleText) {
@@ -68,12 +68,12 @@ export const Header = (props: HeaderProps) => {
           </a>
         </div>
         {!isInstancePage &&
-          enableCompactMode &&
-          !layoutIsMobile &&
+          isShowStatsInHeader &&
+          !isMobile &&
           props.displayOptions && (
             <div className="flex-1 flex justify-center">
               <StatsBar
-                enableCompactMode={enableCompactMode}
+                isShowStatsInHeader={isShowStatsInHeader}
                 {...(props as StatsBarProps)}
               />
             </div>

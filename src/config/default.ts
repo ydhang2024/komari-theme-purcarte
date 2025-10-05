@@ -21,7 +21,7 @@ export interface ConfigOptions {
   enableSearchButton: boolean; // 是否启用搜索按钮
   enableAdminButton: boolean; // 是否启用管理员按钮
   enableJsonRPC2Api: boolean; // 是否启用 JSON-RPC2 API 适配
-  enableCompactMode: boolean; // 是否启用紧凑模式
+  isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
   enableGroupedBar: boolean; // 是否启用分组栏
@@ -59,7 +59,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableSearchButton: true,
   enableAdminButton: true,
   enableJsonRPC2Api: false,
-  enableCompactMode: false,
+  isShowStatsInHeader: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
   enableGroupedBar: true,

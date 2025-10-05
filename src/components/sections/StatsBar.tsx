@@ -12,7 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { cn, formatBytes } from "@/utils";
 import { useAppConfig } from "@/config";
-import { useCompactLayout } from "@/hooks/useCompactLayout";
+import { useIsMobile } from "@/hooks/useMobile";
 
 // --- 类型定义 ---
 type DisplayOptions = {
@@ -42,13 +42,14 @@ export interface StatsBarProps {
   groups?: string[];
   selectedGroup?: string;
   onSelectGroup?: (group: string) => void;
-  enableCompactMode?: boolean;
+  isShowStatsInHeader?: boolean;
 }
 
 interface StatEntry {
   key: string;
   label: string;
   lines: string[];
+  isLabelVertical?: boolean;
 }
 
 // --- 内部组件 ---
@@ -57,26 +58,33 @@ const StatChip = memo(
   ({
     label,
     lines,
-    isCompact,
+    isLabelVertical,
+    isInHeader,
     isMobile,
   }: {
     label: string;
     lines: string[];
-    isCompact: boolean;
+    isLabelVertical?: boolean;
+    isInHeader?: boolean;
     isMobile: boolean;
   }) => {
-    if (isMobile || isCompact) {
+    if (isMobile || isInHeader) {
       return (
         <div
           className={cn(
             "flex shrink-0 bg-transition px-1.5 py-0.5 text-center",
-            isMobile ? "flex-col items-center" : "items-center gap-1.5"
+            isLabelVertical ? "" : "flex-col"
           )}>
-          <span
-            className="text-xs font-semibold text-secondary-foreground/60"
-            style={!isMobile ? { writingMode: "vertical-rl" } : {}}>
+          <div
+            className={cn(
+              "text-xs font-semibold text-secondary-foreground",
+              isMobile ? "" : "tracking-widest "
+            )}
+            style={
+              !isMobile && isLabelVertical ? { writingMode: "vertical-rl" } : {}
+            }>
             {label}
-          </span>
+          </div>
           <div className="text-xs font-semibold text-secondary-foreground leading-tight">
             {lines.map((line, index) => (
               <div key={index}>{line}</div>
@@ -89,7 +97,7 @@ const StatChip = memo(
     return (
       <div className="w-full py-1">
         <div className="flex flex-col gap-2">
-          <label className="font-semibold text-secondary-foreground/60">
+          <label className="font-semibold text-secondary-foreground">
             {label}
           </label>
           <div className="font-medium -mt-2">
@@ -110,7 +118,7 @@ const StatChip = memo(
 );
 
 const CurrentTimeChip = memo(
-  ({ isCompact, isMobile }: { isCompact: boolean; isMobile: boolean }) => {
+  ({ isInHeader, isMobile }: { isInHeader?: boolean; isMobile: boolean }) => {
     const [time, setTime] = useState(() => new Date());
 
     useEffect(() => {
@@ -121,9 +129,9 @@ const CurrentTimeChip = memo(
     return (
       <StatChip
         key="currentTime"
-        label={isCompact ? (isMobile ? "当前时间" : "时间") : "当前时间"}
+        label={"当前时间"}
         lines={[time.toLocaleTimeString()]}
-        isCompact={isCompact}
+        isInHeader={isInHeader}
         isMobile={isMobile}
       />
     );
@@ -134,9 +142,9 @@ const StatsToggleMenu = memo(
   ({
     displayOptions,
     setDisplayOptions,
-    isCompact,
+    isMobile,
   }: Pick<StatsBarProps, "displayOptions" | "setDisplayOptions"> & {
-    isCompact: boolean;
+    isMobile: boolean;
   }) => (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -144,9 +152,9 @@ const StatsToggleMenu = memo(
           variant="ghost"
           size="icon"
           className={
-            isCompact ? "h-8 w-8 shrink-0 rounded-full" : "cursor-pointer"
+            isMobile ? "h-8 w-8 shrink-0 rounded-full" : "cursor-pointer"
           }>
-          <Settings2 className={isCompact ? "h-4 w-4" : ""} />
+          <Settings2 className={isMobile ? "h-4 w-4" : ""} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -233,30 +241,26 @@ export const StatsBar = (props: StatsBarProps) => {
     selectedGroup,
     onSelectGroup,
   } = props;
-  const { enableCompactMode, mergeGroupsWithStats, enableGroupedBar } =
+  const { isShowStatsInHeader, mergeGroupsWithStats, enableGroupedBar } =
     useAppConfig();
-  const { isMobile, layoutIsMobile } = useCompactLayout(enableCompactMode);
+  const isMobile = useIsMobile();
 
   const resolvedStats = useMemo<StatEntry[]>(() => {
     const getLabel = (compactLabel: string, fullLabel: string) =>
-      enableCompactMode
-        ? layoutIsMobile
-          ? fullLabel
-          : compactLabel
-        : fullLabel;
+      isShowStatsInHeader ? (isMobile ? fullLabel : compactLabel) : fullLabel;
 
     const entries: StatEntry[] = [];
     if (displayOptions.currentOnline) {
       entries.push({
         key: "currentOnline",
-        label: getLabel("在线", "当前在线"),
+        label: getLabel("当前在线", "当前在线"),
         lines: [loading ? "..." : `${stats.onlineCount} / ${stats.totalCount}`],
       });
     }
     if (displayOptions.regionOverview) {
       entries.push({
         key: "regionOverview",
-        label: getLabel("地区", "点亮地区"),
+        label: getLabel("点亮地区", "点亮地区"),
         lines: [loading ? "..." : String(stats.uniqueRegions)],
       });
     }
@@ -270,6 +274,7 @@ export const StatsBar = (props: StatsBarProps) => {
               `↑ ${formatBytes(stats.totalTrafficUp)}`,
               `↓ ${formatBytes(stats.totalTrafficDown)}`,
             ],
+        isLabelVertical: !isMobile && isShowStatsInHeader,
       });
     }
     if (displayOptions.networkSpeed) {
@@ -282,15 +287,16 @@ export const StatsBar = (props: StatsBarProps) => {
               `↑ ${formatBytes(stats.currentSpeedUp)}/s`,
               `↓ ${formatBytes(stats.currentSpeedDown)}/s`,
             ],
+        isLabelVertical: !isMobile && isShowStatsInHeader,
       });
     }
     return entries;
-  }, [displayOptions, loading, stats, layoutIsMobile, enableCompactMode]);
+  }, [displayOptions, loading, stats, isMobile, isShowStatsInHeader]);
 
   const hasVisibleStats = Object.values(displayOptions).some(Boolean);
 
   // 紧凑模式 - 桌面端
-  if (enableCompactMode && !layoutIsMobile) {
+  if (isShowStatsInHeader && !isMobile) {
     return (
       <div className="flex items-center gap-2">
         {enableGroupedBar && mergeGroupsWithStats && (
@@ -302,15 +308,20 @@ export const StatsBar = (props: StatsBarProps) => {
         )}
         <div className="flex items-center gap-1.5">
           {displayOptions.currentTime && (
-            <CurrentTimeChip isCompact={true} isMobile={false} />
+            <CurrentTimeChip isInHeader={true} isMobile={isMobile} />
           )}
           {resolvedStats.map(({ key, ...rest }) => (
-            <StatChip key={key} {...rest} isCompact={true} isMobile={false} />
+            <StatChip
+              key={key}
+              {...rest}
+              isInHeader={true}
+              isMobile={isMobile}
+            />
           ))}
           <StatsToggleMenu
             displayOptions={displayOptions}
             setDisplayOptions={setDisplayOptions}
-            isCompact={true}
+            isMobile={isMobile}
           />
         </div>
       </div>
@@ -319,7 +330,7 @@ export const StatsBar = (props: StatsBarProps) => {
 
   const getGridTemplateColumns = () => {
     if (!isMobile) {
-      return "repeat(auto-fit, minmax(180px, 1fr))";
+      return "repeat(auto-fit, minmax(100px, 1fr))";
     }
     const visibleCount =
       resolvedStats.length +
@@ -334,9 +345,7 @@ export const StatsBar = (props: StatsBarProps) => {
     <>
       <div
         className={`purcarte-blur theme-card-style relative flex items-center text-secondary-foreground my-4 ${
-          layoutIsMobile
-            ? "text-xs p-2"
-            : "text-sm px-4 min-w-[300px] min-h-[5rem]"
+          isMobile ? "text-xs p-2" : "text-sm px-4 min-w-[300px] min-h-[5rem]"
         }`}>
         <div
           className="grid w-full gap-2 text-center items-center py-3"
@@ -357,18 +366,10 @@ export const StatsBar = (props: StatsBarProps) => {
           {hasVisibleStats ? (
             <>
               {displayOptions.currentTime && (
-                <CurrentTimeChip
-                  isCompact={enableCompactMode}
-                  isMobile={layoutIsMobile}
-                />
+                <CurrentTimeChip isMobile={isMobile} />
               )}
               {resolvedStats.map(({ key, ...rest }) => (
-                <StatChip
-                  key={key}
-                  {...rest}
-                  isCompact={enableCompactMode}
-                  isMobile={layoutIsMobile}
-                />
+                <StatChip key={key} {...rest} isMobile={isMobile} />
               ))}
             </>
           ) : (
@@ -381,7 +382,7 @@ export const StatsBar = (props: StatsBarProps) => {
           <StatsToggleMenu
             displayOptions={displayOptions}
             setDisplayOptions={setDisplayOptions}
-            isCompact={true}
+            isMobile={isMobile}
           />
         </div>
       </div>
