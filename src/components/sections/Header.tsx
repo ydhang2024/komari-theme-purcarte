@@ -28,7 +28,7 @@ import {
 import { StatsBar } from "../sections/StatsBar";
 import type { StatsBarProps } from "../sections/StatsBar";
 
-interface HeaderProps extends Partial<StatsBarProps> {
+interface HeaderProps extends StatsBarProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }

@@ -1,6 +1,77 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { formatPrice } from "@/utils";
 import type { NodeData } from "@/types/node";
+import { useNodeData } from "@/contexts/NodeDataContext";
+import { useLiveData } from "@/contexts/LiveDataContext";
+import type { NodeDataContextType } from "@/contexts/NodeDataContext";
+import type { LiveDataContextType } from "@/contexts/LiveDataContext";
+
+export const useNodeListCommons = (searchTerm: string) => {
+  const {
+    nodes: staticNodes,
+    loading,
+    getGroups,
+  } = useNodeData() as NodeDataContextType;
+  const { liveData } = useLiveData() as LiveDataContextType;
+  const [selectedGroup, setSelectedGroup] = useState("所有");
+
+  const combinedNodes = useMemo(() => {
+    if (!staticNodes) return [];
+    return staticNodes.map((node: NodeData) => {
+      const stats = liveData ? liveData[node.uuid] : undefined;
+      return {
+        ...node,
+        stats: stats,
+      };
+    });
+  }, [staticNodes, liveData]);
+
+  const groups = useMemo(() => ["所有", ...getGroups()], [getGroups]);
+
+  const filteredNodes = useMemo(() => {
+    return combinedNodes
+      .filter(
+        (node: NodeData & { stats?: any }) =>
+          selectedGroup === "所有" || node.group === selectedGroup
+      )
+      .filter((node: NodeData) =>
+        node.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  }, [combinedNodes, selectedGroup, searchTerm]);
+
+  const stats = useMemo(() => {
+    return {
+      onlineCount: filteredNodes.filter((n) => n.stats?.online).length,
+      totalCount: filteredNodes.length,
+      uniqueRegions: new Set(filteredNodes.map((n) => n.region)).size,
+      totalTrafficUp: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_total_up || 0),
+        0
+      ),
+      totalTrafficDown: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_total_down || 0),
+        0
+      ),
+      currentSpeedUp: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_out || 0),
+        0
+      ),
+      currentSpeedDown: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_in || 0),
+        0
+      ),
+    };
+  }, [filteredNodes]);
+
+  return {
+    loading,
+    groups,
+    filteredNodes,
+    stats,
+    selectedGroup,
+    setSelectedGroup,
+  };
+};
 
 export const useNodeCommons = (node: NodeData & { stats?: any }) => {
   const { stats } = node;

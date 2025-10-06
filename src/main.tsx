@@ -19,8 +19,8 @@ import { NodeDataProvider } from "@/contexts/NodeDataContext";
 import { LiveDataProvider } from "@/contexts/LiveDataContext";
 import Footer from "@/components/sections/Footer";
 import Loading from "./components/loading";
-
 import type { StatsBarProps } from "./components/sections/StatsBar";
+import { useNodeListCommons } from "@/hooks/useNodeCommons";
 const HomePage = lazy(() => import("@/pages/Home"));
 const InstancePage = lazy(() => import("@/pages/instance"));
 const NotFoundPage = lazy(() => import("@/pages/NotFound"));
@@ -33,12 +33,31 @@ const homeScrollState = {
 // 内部应用组件，在 ConfigProvider 内部使用配置
 export const AppContent = () => {
   const { siteStatus } = useAppConfig();
-  const { appearance, color } = useTheme();
+  const { appearance, color, statusCardsVisibility, setStatusCardsVisibility } =
+    useTheme();
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [statsBarProps, setStatsBarProps] = useState<StatsBarProps | null>(
-    null
-  );
   const location = useLocation();
+  const {
+    loading,
+    groups,
+    filteredNodes,
+    stats,
+    selectedGroup,
+    setSelectedGroup,
+  } = useNodeListCommons(searchTerm);
+  const { enableGroupedBar } = useAppConfig();
+
+  const statsBarProps: StatsBarProps = {
+    displayOptions: statusCardsVisibility,
+    setDisplayOptions: setStatusCardsVisibility,
+    stats,
+    loading,
+    enableGroupedBar,
+    groups,
+    selectedGroup,
+    onSelectGroup: setSelectedGroup,
+  };
   const homeViewportRef = useRef<HTMLDivElement | null>(null);
   const instanceViewportRef = useRef<HTMLDivElement | null>(null);
 
@@ -106,7 +125,11 @@ export const AppContent = () => {
                           <HomePage
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
-                            setStatsBarProps={setStatsBarProps}
+                            filteredNodes={filteredNodes}
+                            selectedGroup={selectedGroup}
+                            setSelectedGroup={setSelectedGroup}
+                            stats={stats}
+                            groups={groups}
                           />
                         </main>
                       </ScrollArea>

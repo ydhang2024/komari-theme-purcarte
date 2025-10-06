@@ -9,7 +9,7 @@ import { getWsService } from "../services/api";
 import { useNodeData } from "./NodeDataContext";
 import type { RpcNodeStatusMap } from "../types/rpc";
 
-interface LiveDataContextType {
+export interface LiveDataContextType {
   liveData: RpcNodeStatusMap | null;
 }
 
@@ -35,11 +35,17 @@ export const LiveDataProvider = ({
 }: LiveDataProviderProps) => {
   const [liveData, setLiveData] = useState<RpcNodeStatusMap | null>(null);
   const { loading } = useNodeData();
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
 
   useEffect(() => {
-    // 只有在加载完成、站点非私有且启用了 WebSocket 时才连接
-    if (!loading && enableWebSocket) {
-      const wsService = getWsService(); // 在需要时才获取实例
+    if (!loading && !initialLoadComplete) {
+      setInitialLoadComplete(true);
+    }
+  }, [loading, initialLoadComplete]);
+
+  useEffect(() => {
+    if (initialLoadComplete && enableWebSocket) {
+      const wsService = getWsService();
 
       const handleWebSocketData = (data: any) => {
         setLiveData(data as RpcNodeStatusMap);
@@ -50,15 +56,14 @@ export const LiveDataProvider = ({
 
       return () => {
         unsubscribe();
-        wsService.disconnect(); // 确保在组件卸载或条件变化时断开连接
+        wsService.disconnect();
       };
     } else {
-      // 如果条件不满足，确保断开任何现有连接
-      const wsService = getWsService(); // 获取实例以调用 disconnect
+      const wsService = getWsService();
       wsService.disconnect();
       setLiveData(null);
     }
-  }, [loading, enableWebSocket]);
+  }, [initialLoadComplete, enableWebSocket]);
 
   return (
     <LiveDataContext.Provider value={{ liveData }}>

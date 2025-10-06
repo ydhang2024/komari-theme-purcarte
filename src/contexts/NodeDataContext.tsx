@@ -113,7 +113,7 @@ function useNodesInternal() {
   };
 }
 
-type NodeDataContextType = ReturnType<typeof useNodesInternal>;
+export type NodeDataContextType = ReturnType<typeof useNodesInternal>;
 
 const NodeDataContext = createContext<NodeDataContextType | null>(null);
 
