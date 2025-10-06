@@ -62,27 +62,20 @@ export const AppContent = () => {
   const instanceViewportRef = useRef<HTMLDivElement | null>(null);
 
   const handleHomeScroll = () => {
-    const viewport = homeViewportRef.current;
-    if (!viewport) return;
-    homeScrollState.position = viewport.scrollTop;
+    if (location.pathname === "/" && homeViewportRef.current) {
+      homeScrollState.position = homeViewportRef.current.scrollTop;
+    }
   };
 
   useEffect(() => {
-    if (location.pathname !== "/") return;
-    const viewport = homeViewportRef.current;
-    if (viewport) {
-      viewport.scrollTop = homeScrollState.position;
-      return;
+    if (location.pathname === "/") {
+      const timer = setTimeout(() => {
+        if (homeViewportRef.current) {
+          homeViewportRef.current.scrollTop = homeScrollState.position;
+        }
+      }, 100);
+      return () => clearTimeout(timer);
     }
-
-    const frame = requestAnimationFrame(() => {
-      const nextViewport = homeViewportRef.current;
-      if (nextViewport) {
-        nextViewport.scrollTop = homeScrollState.position;
-      }
-    });
-
-    return () => cancelAnimationFrame(frame);
   }, [location.pathname]);
 
   useEffect(() => {
