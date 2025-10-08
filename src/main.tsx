@@ -12,6 +12,7 @@ import { Theme } from "@radix-ui/themes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Header } from "@/components/sections/Header";
 import { ConfigProvider, useAppConfig } from "@/config";
+import { DynamicContent } from "@/components/DynamicContent";
 import { useThemeManager, useTheme } from "@/hooks/useTheme";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NodeDataProvider } from "@/contexts/NodeDataContext";
@@ -31,8 +32,7 @@ const homeScrollState = {
 
 // 内部应用组件，在 ConfigProvider 内部使用配置
 export const AppContent = () => {
-  const { siteStatus, enableVideoBackground, videoBackgroundUrl } =
-    useAppConfig();
+  const { siteStatus } = useAppConfig();
   const { appearance, color } = useTheme();
   const [searchTerm, setSearchTerm] = useState("");
   const [statsBarProps, setStatsBarProps] = useState<StatsBarProps | null>(
@@ -77,21 +77,12 @@ export const AppContent = () => {
   }, [location.pathname]);
 
   return (
-    <>
-      {enableVideoBackground && videoBackgroundUrl && (
-        <video
-          src={videoBackgroundUrl as string}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="fixed right-0 bottom-0 min-w-full min-h-full w-auto h-auto -z-1 object-cover"></video>
-      )}
-      <Theme
-        appearance={appearance}
-        accentColor={color}
-        scaling="110%"
-        style={{ backgroundColor: "transparent" }}>
+    <Theme
+      appearance={appearance}
+      accentColor={color}
+      scaling="110%"
+      style={{ backgroundColor: "transparent" }}>
+      <DynamicContent>
         <div className="flex flex-col text-sm h-dvh">
           <Header
             searchTerm={searchTerm}
@@ -111,7 +102,7 @@ export const AppContent = () => {
                         className="h-full"
                         viewportRef={homeViewportRef}
                         viewportProps={{ onScroll: handleHomeScroll }}>
-                        <main className="w-[90dvw] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <HomePage
                             searchTerm={searchTerm}
                             setSearchTerm={setSearchTerm}
@@ -127,7 +118,7 @@ export const AppContent = () => {
                       <ScrollArea
                         className="h-full"
                         viewportRef={instanceViewportRef}>
-                        <main className="w-[90%] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <InstancePage />
                         </main>
                       </ScrollArea>
@@ -137,7 +128,7 @@ export const AppContent = () => {
                     path="*"
                     element={
                       <ScrollArea className="h-full">
-                        <main className="w-[90%] max-w-screen-2xl h-full mx-auto flex-1">
+                        <main className="w-(--main-width) max-w-screen-2xl h-full mx-auto flex-1">
                           <NotFoundPage />
                         </main>
                       </ScrollArea>
@@ -149,8 +140,8 @@ export const AppContent = () => {
           </div>
           <Footer />
         </div>
-      </Theme>
-    </>
+      </DynamicContent>
+    </Theme>
   );
 };
 

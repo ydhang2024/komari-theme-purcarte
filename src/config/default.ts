@@ -1,8 +1,11 @@
 // 配置类型定义
 export interface ConfigOptions {
-  backgroundImage: string; // 背景图片URL
+  mainWidth: number; // 主内容宽度百分比
+  backgroundImage: string; // 桌面端背景图片URL
+  backgroundImageMobile: string; // 移动端背景图片URL
   enableVideoBackground: boolean; // 是否启用视频背景
-  videoBackgroundUrl: string; // 视频背景URL
+  videoBackgroundUrl: string; // 桌面端视频背景URL
+  videoBackgroundUrlMobile: string; // 移动端视频背景URL
   blurValue: number; // 磨砂玻璃模糊值
   blurBackgroundColor: string; // 磨砂玻璃背景颜色
   enableTransparentTags: boolean; // 是否启用标签透明背景
@@ -19,7 +22,7 @@ export interface ConfigOptions {
   enableSearchButton: boolean; // 是否启用搜索按钮
   enableAdminButton: boolean; // 是否启用管理员按钮
   enableJsonRPC2Api: boolean; // 是否启用 JSON-RPC2 API 适配
-  enableCompactMode: boolean; // 是否启用紧凑模式
+  isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
   enableGroupedBar: boolean; // 是否启用分组栏
@@ -28,15 +31,20 @@ export interface ConfigOptions {
   enableConnectBreaks: boolean; // 是否启用连接断点
   pingChartMaxPoints: number; // 延迟图表最大点数
   enableSwap: boolean; // 是否启用SWAP显示
+  isShowHWBarInCard: boolean; // 是否在卡片中显示硬件信息栏
+  isShowValueUnderProgressBar: boolean; // 是否在流量进度条下方显示数值
   selectTrafficProgressStyle: "circular" | "linear"; // 流量进度条样式
   enableListItemProgressBar: boolean; // 是否启用列表视图进度条
 }
 
 // 默认配置值
 export const DEFAULT_CONFIG: ConfigOptions = {
+  mainWidth: 90,
   backgroundImage: "/assets/Moonlit-Scenery.webp",
+  backgroundImageMobile: "",
   enableVideoBackground: false,
   videoBackgroundUrl: "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
+  videoBackgroundUrlMobile: "",
   blurValue: 10,
   blurBackgroundColor: "rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)",
   enableTransparentTags: true,
@@ -55,7 +63,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableSearchButton: true,
   enableAdminButton: true,
   enableJsonRPC2Api: false,
-  enableCompactMode: false,
+  isShowStatsInHeader: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
   enableGroupedBar: true,
@@ -64,6 +72,8 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableConnectBreaks: false,
   pingChartMaxPoints: 0,
   enableSwap: true,
+  isShowHWBarInCard: true,
+  isShowValueUnderProgressBar: false,
   selectTrafficProgressStyle: "linear",
   enableListItemProgressBar: true,
 };

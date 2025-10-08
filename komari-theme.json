@@ -14,11 +14,25 @@
                 "type": "title"
             },
             {
+                "key": "mainWidth",
+                "name": "主要内容宽度",
+                "type": "number",
+                "default": 85,
+                "help": "调整主要内容的最大宽度，单位为视口宽度的百分比（vw），建议值为 80-90"
+            },
+            {
                 "key": "backgroundImage",
-                "name": "背景图片链接",
+                "name": "桌面端背景图片链接",
                 "type": "string",
                 "default": "/assets/Moonlit-Scenery.webp",
-                "help": "目前支持单张背景图片或图片api，请自行测试（eg: https://test.com/1.png）"
+                "help": "目前支持单张背景图片或图片api，使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，请自行测试（eg: https://test.com/1.png）"
+            },
+            {
+                "key": "backgroundImageMobile",
+                "name": "移动端背景图片链接",
+                "type": "string",
+                "default": "",
+                "help": "移动端背景图片链接，与桌面端一样区分亮暗模式，留空则使用桌面端背景"
             },
             {
                 "key": "enableVideoBackground",
@@ -29,10 +43,17 @@
             },
             {
                 "key": "videoBackgroundUrl",
-                "name": "视频背景链接",
+                "name": "桌面端视频背景链接",
                 "type": "string",
                 "default": "/assets/LanternRivers_1080p15fps2Mbps3s.mp4",
-                "help": "视频背景链接（eg: https://test.com/1.mp4），建议使用无声视频，且视频文件较大时可能会影响加载速度"
+                "help": "视频背景链接（eg: https://test.com/1.mp4），使用“|”分隔亮色模式和暗色模式，填写单个则同时用于亮暗模式，建议使用无声视频，且视频文件较大时可能会影响加载速度"
+            },
+            {
+                "key": "videoBackgroundUrlMobile",
+                "name": "移动端视频背景链接",
+                "type": "string",
+                "default": "",
+                "help": "移动端视频背景链接，与桌面端一样区分亮暗模式，留空则使用桌面端视频"
             },
             {
                 "key": "enableBlur",
@@ -53,7 +74,7 @@
                 "name": "磨砂玻璃背景色",
                 "type": "string",
                 "default": "rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)",
-                "help": "调整模糊背景色，推荐 rgba 颜色值，使用“|”分隔亮色模式和暗色模式的颜色值（eg: rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)）"
+                "help": "调整模糊背景色，推荐 rgba 颜色值（eg: rgba(255, 255, 255, 0.5)|rgba(0, 0, 0, 0.5)），使用“|”分隔亮色模式和暗色模式的颜色值，填写单个则同时用于亮暗模式"
             },
             {
                 "key": "enableTransparentTags",
@@ -170,11 +191,11 @@
                 "help": "启用后将在支持的 Komari 版本（>=1.0.7）优先使用 JSON-RPC2 API 获取数据，以提升兼容性和性能，若出现问题请关闭此选项"
             },
             {
-                "key": "enableCompactMode",
-                "name": "启用紧凑模式",
+                "key": "isShowStatsInHeader",
+                "name": "是否在标题栏中显示统计信息",
                 "type": "switch",
                 "default": false,
-                "help": "启用后将统计栏挪至标题栏，仅推荐在大屏设备上使用，手机端仅缩小字体和间距"
+                "help": "启用后将在标题栏中显示统计信息，仅在大屏桌面端有效，当标题栏空间不足时将恢复原统计栏位置"
             },
             {
                 "key": "mergeGroupsWithStats",
@@ -203,6 +224,20 @@
                 "type": "switch",
                 "default": true,
                 "help": "启用后默认显示 SWAP 信息"
+            },
+            {
+                "key": "isShowHWBarInCard",
+                "name": "是否在卡片中显示硬件信息栏",
+                "type": "switch",
+                "default": true,
+                "help": "启用后将在节点卡片中标题栏之下显示硬件信息栏（CPU、内存和硬盘总量）"
+            },
+            {
+                "key": "isShowValueUnderProgressBar",
+                "name": "是否在流量进度条下方显示数值",
+                "type": "switch",
+                "default": false,
+                "help": "启用后将在内存、SWAP、硬盘占用情况进度条下方显示实际占用数值"
             },
             {
                 "key": "selectTrafficProgressStyle",
