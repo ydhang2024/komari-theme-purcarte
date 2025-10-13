@@ -26,6 +26,7 @@ interface HomePageProps {
   setSelectedGroup: (group: string) => void;
   stats: any;
   groups: string[];
+  handleSort: (key: any) => void;
 }
 
 const HomePage: React.FC<HomePageProps> = ({
@@ -36,6 +37,7 @@ const HomePage: React.FC<HomePageProps> = ({
   setSelectedGroup,
   stats,
   groups,
+  handleSort,
 }) => {
   const { viewMode, statusCardsVisibility, setStatusCardsVisibility } =
     useTheme();
@@ -71,6 +73,7 @@ const HomePage: React.FC<HomePageProps> = ({
           groups={groups}
           selectedGroup={selectedGroup}
           onSelectGroup={setSelectedGroup}
+          onSort={handleSort}
         />
       )}
 

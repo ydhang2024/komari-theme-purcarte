@@ -45,6 +45,7 @@ export const AppContent = () => {
     stats,
     selectedGroup,
     setSelectedGroup,
+    handleSort,
   } = useNodeListCommons(searchTerm);
   const { enableGroupedBar } = useAppConfig();
 
@@ -123,6 +124,7 @@ export const AppContent = () => {
                             setSelectedGroup={setSelectedGroup}
                             stats={stats}
                             groups={groups}
+                            handleSort={handleSort}
                           />
                         </main>
                       </ScrollArea>
