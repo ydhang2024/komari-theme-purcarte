@@ -133,8 +133,8 @@
 @layer utilities {
   .radix-themes {
     --purcarte-card-color: var(--card-light);
-    --theme-text-muted-color: rgb(from var(--accent-12) r g b / 0.8);
-    --theme-line-muted-color: rgb(from var(--accent-10) r g b / 0.5);
+    --theme-text-muted-color: var(--secondary-foreground);
+    --theme-line-muted-color: rgb(from var(--secondary-foreground) r g b / 0.8);
   }
 
   .radix-themes.dark {

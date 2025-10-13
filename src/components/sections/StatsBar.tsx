@@ -77,7 +77,7 @@ const StatChip = memo(
           )}>
           <div
             className={cn(
-              "text-xs font-semibold",
+              "text-xs text-secondary-foreground font-semibold",
               isMobile ? "" : "tracking-widest "
             )}
             style={
@@ -85,7 +85,7 @@ const StatChip = memo(
             }>
             {label}
           </div>
-          <div className="text-xs font-semibold text-secondary-foreground leading-tight">
+          <div className="text-xs font-semibold leading-tight">
             {lines.map((line, index) => (
               <div key={index}>{line}</div>
             ))}
@@ -97,8 +97,8 @@ const StatChip = memo(
     return (
       <div className="w-full py-1">
         <div className="flex flex-col gap-2">
-          <label className="font-semibold">{label}</label>
-          <div className="font-medium -mt-2 text-secondary-foreground">
+          <label className="text-secondary-foreground">{label}</label>
+          <div className="font-medium -mt-2">
             {lines.length > 1 ? (
               <div className="flex flex-col items-center">
                 {lines.map((line, index) => (
@@ -200,7 +200,7 @@ const GroupSelector = memo(
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="secondary"
+            variant="default"
             size="sm"
             className="h-7 shrink-0 rounded-full px-2 text-xs font-semibold">
             <Layers className="mr-1.5 h-3.5 w-3.5" />

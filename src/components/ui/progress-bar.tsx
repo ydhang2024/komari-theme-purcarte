@@ -15,7 +15,7 @@ export const ProgressBar = ({
 
   return (
     <div
-      className={`w-full bg-(--accent-4)/50 rounded-full ${h} overflow-hidden`}>
+      className={`w-full bg-(--accent-4)/50 dark:bg-(--accent-a5) rounded-full ${h} overflow-hidden`}>
       <div
         className={`${h} ${progressRoundedClass} transition-all duration-500 ${getProgressBarClass(
           clampedValue

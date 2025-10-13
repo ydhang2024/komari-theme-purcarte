@@ -322,7 +322,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
               </div>
             </div>
             <div className={`flex gap-2 ${isMobile ? "w-full mt-2" : ""}`}>
-              <Button variant="secondary" onClick={handleToggleAll} size="sm">
+              <Button variant="default" onClick={handleToggleAll} size="sm">
                 {pingHistory?.tasks &&
                 visiblePingTasks.length === pingHistory.tasks.length ? (
                   <>
@@ -337,7 +337,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
                 )}
               </Button>
               <Button
-                variant="secondary"
+                variant="default"
                 onClick={() => {
                   if (timeRange) {
                     if (chartData.length > 1) {
@@ -429,7 +429,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
                       x={point.x}
                       stroke={point.color}
                       strokeWidth={1.5}
-                      strokeOpacity={0.5}
+                      strokeOpacity={0.6}
                     />
                   ))}
                 {sortedTasks.map((task) => (

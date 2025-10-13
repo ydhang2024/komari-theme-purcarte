@@ -14,7 +14,7 @@ export const generateColor = (taskName: string, sortedTasks: PingTask[]) => {
   const hue = (index * (360 / total)) % 360;
 
   // 使用OKLCH色彩空间，优化折线图的颜色区分度
-  const oklchColor = `oklch(0.6 0.2 ${hue} / .8)`;
+  const oklchColor = `oklch(0.7 0.2 ${hue} / .8)`;
 
   // 为不支持OKLCH的浏览器提供HSL备用色
   const hslFallback = `hsl(${hue}, 50%, 60%)`;

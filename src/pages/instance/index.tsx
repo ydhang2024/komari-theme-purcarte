@@ -191,14 +191,14 @@ const InstancePage = () => {
         <div className="purcarte-blur theme-card-style p-2">
           <div className="flex justify-center space-x-2">
             <Button
-              variant={chartType === "load" ? "secondary" : "ghost"}
+              variant={chartType === "load" ? "default" : "ghost"}
               size="sm"
               onClick={() => handleChartTypeChange("load")}>
               负载
             </Button>
             {enablePingChart && (
               <Button
-                variant={chartType === "ping" ? "secondary" : "ghost"}
+                variant={chartType === "ping" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => handleChartTypeChange("ping")}>
                 延迟
@@ -215,7 +215,7 @@ const InstancePage = () => {
               {loadTimeRanges.map((range) => (
                 <Button
                   key={range.label}
-                  variant={loadHours === range.hours ? "secondary" : "ghost"}
+                  variant={loadHours === range.hours ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setLoadHours(range.hours)}>
                   {range.label}
@@ -227,7 +227,7 @@ const InstancePage = () => {
               {pingTimeRanges.map((range) => (
                 <Button
                   key={range.label}
-                  variant={pingHours === range.hours ? "secondary" : "ghost"}
+                  variant={pingHours === range.hours ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setPingHours(range.hours)}>
                   {range.label}

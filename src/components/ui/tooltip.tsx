@@ -28,8 +28,8 @@ export const CustomTooltip = ({
 
   if (active && payload && payload.length) {
     return (
-      <div className="bg-background/80 p-3 theme-card-style max-w-xs">
-        <p className="text-xs font-medium text-muted-foreground mb-2">
+      <div className="purcarte-blur p-3 theme-card-style max-w-xs">
+        <p className="text-xs font-medium text-secondary-foreground mb-2">
           {labelFormatter
             ? labelFormatter(label)
             : defaultLabelFormatter(label)}
