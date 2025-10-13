@@ -1,7 +1,7 @@
 import {} from "react";
 import { Button } from "@/components/ui/button";
 import { StatsBar } from "@/components/sections/StatsBar";
-import { NodeGrid } from "@/components/sections/NodeGrid";
+import { NodeGridContainer } from "@/components/sections/NodeGrid";
 import { NodeTable } from "@/components/sections/NodeTable";
 import Loading from "@/components/loading";
 import type { NodeData } from "@/types/node";
@@ -92,16 +92,11 @@ const HomePage: React.FC<HomePageProps> = ({
       <div className="space-y-4 my-4">
         {filteredNodes.length > 0 ? (
           viewMode === "grid" ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
-              {filteredNodes.map((node) => (
-                <NodeGrid
-                  key={node.uuid}
-                  node={node}
-                  enableSwap={enableSwap}
-                  selectTrafficProgressStyle={selectTrafficProgressStyle}
-                />
-              ))}
-            </div>
+            <NodeGridContainer
+              nodes={filteredNodes}
+              enableSwap={enableSwap}
+              selectTrafficProgressStyle={selectTrafficProgressStyle}
+            />
           ) : (
             <ScrollArea
               className="purcarte-blur theme-card-style w-full"
