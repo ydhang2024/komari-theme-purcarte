@@ -226,7 +226,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
   }, [pingHistory?.records, sortedTasks, timeRange]);
 
   return (
-    <div className="relative space-y-4">
+    <div className="relative space-y-4 h-full flex flex-col min-h-114">
       {loading && (
         <div className="absolute inset-0 flex items-center justify-center purcarte-blur rounded-lg z-10">
           <Loading text="正在加载图表数据..." />
@@ -284,7 +284,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
         </Card>
       )}
 
-      <Card>
+      <Card className="flex-grow flex flex-col">
         <CardHeader>
           <div className="flex justify-between items-center flex-wrap">
             <div className="flex gap-4 flex-wrap">
@@ -371,9 +371,12 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 flex-grow flex flex-col">
           {pingHistory?.tasks && pingHistory.tasks.length > 0 ? (
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              className={"min-h-90"}>
               <LineChart data={chartData} margin={chartMargin}>
                 <CartesianGrid
                   strokeDasharray="2 4"
@@ -491,7 +494,7 @@ const PingChart = memo(({ node, hours }: PingChartProps) => {
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[400px] flex items-center justify-center">
+            <div className="min-h-90 flex items-center justify-center">
               <p>暂无数据</p>
             </div>
           )}

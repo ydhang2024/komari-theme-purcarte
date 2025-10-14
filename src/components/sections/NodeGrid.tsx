@@ -38,6 +38,8 @@ const NodeDetailModal = ({ node, onClose }: NodeDetailModalProps) => {
     setTimeout(onClose, 300);
   };
 
+  const { pingChartTimeInPreview } = useAppConfig();
+
   return (
     <div
       className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300 ${
@@ -58,9 +60,9 @@ const NodeDetailModal = ({ node, onClose }: NodeDetailModalProps) => {
         <ScrollArea
           className="h-[calc(80vh-100px)]"
           viewportProps={{ className: "px-2" }}>
-          <div className="space-y-4">
+          <div className="space-y-4 @container">
             <Instance node={node} />
-            <PingChart node={node} hours={24} />
+            <PingChart node={node} hours={pingChartTimeInPreview} />
           </div>
         </ScrollArea>
       </div>

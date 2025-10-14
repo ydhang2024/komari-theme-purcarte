@@ -15,6 +15,7 @@ import { ProgressBar } from "../ui/progress-bar";
 import { useState, useEffect } from "react";
 import Instance from "@/pages/instance/Instance";
 import PingChart from "@/pages/instance/PingChart";
+import { useAppConfig } from "@/config";
 
 interface NodeTableProps {
   nodes: NodeData[];
@@ -32,7 +33,7 @@ export const NodeTable = ({
   const gridCols = enableSwap ? "grid-cols-9" : "grid-cols-8";
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-1">
       <div
         className={`text-primary font-bold grid ${gridCols} text-center shadow-sm shadow-(color:--accent-4)/50 gap-4 p-2 items-center rounded-lg bg-card transition-colors duration-200`}>
         <div className="col-span-2 text-left pl-8">节点名称</div>
@@ -92,6 +93,7 @@ const NodeTableRow = ({
     trafficPercentage,
   } = useNodeCommons(node);
   const gridCols = enableSwap ? "grid-cols-9" : "grid-cols-8";
+  const { pingChartTimeInPreview } = useAppConfig();
 
   return (
     <>
@@ -104,7 +106,7 @@ const NodeTableRow = ({
         } text-primary transition-colors duration-200 cursor-pointer`}>
         <div className="col-span-2 flex items-center text-left">
           <ChevronRight
-            className={`transition-transform duration-300 mr-2 ${
+            className={`transition-transform size-5 duration-300 flex-shrink-0 ${
               isOpen ? "rotate-90" : ""
             }`}
           />
@@ -272,9 +274,15 @@ const NodeTableRow = ({
             setShouldRenderChart(false);
           }
         }}>
-        <div className="space-y-4 p-4 -mt-2">
-          <Instance node={node} />
-          {shouldRenderChart && <PingChart node={node} hours={24} />}
+        <div className="grid grid-cols-3 gap-4 p-2">
+          <div className="col-span-1 @container">
+            <Instance node={node} />
+          </div>
+          <div className="col-span-2">
+            {shouldRenderChart && (
+              <PingChart node={node} hours={pingChartTimeInPreview} />
+            )}
+          </div>
         </div>
       </div>
     </>

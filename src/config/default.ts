@@ -27,11 +27,12 @@ export interface ConfigOptions {
   enableStatsBar: boolean; // 是否启用统计栏
   enableSortControl: boolean; // 是否启用排序控制
   enableGroupedBar: boolean; // 是否启用分组栏
+  enableSwap: boolean; // 是否启用SWAP显示
+  pingChartTimeInPreview: number; // 预览详情的延迟图表时间范围，单位为小时
   enableInstanceDetail: boolean; // 是否启用实例详情
   enablePingChart: boolean; // 是否启用延迟图表
   enableConnectBreaks: boolean; // 是否启用连接断点
   pingChartMaxPoints: number; // 延迟图表最大点数
-  enableSwap: boolean; // 是否启用SWAP显示
   isShowHWBarInCard: boolean; // 是否在卡片中显示硬件信息栏
   isShowValueUnderProgressBar: boolean; // 是否在流量进度条下方显示数值
   selectTrafficProgressStyle: "circular" | "linear"; // 流量进度条样式
@@ -69,11 +70,12 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableStatsBar: true,
   enableSortControl: false,
   enableGroupedBar: true,
+  enableSwap: true,
+  pingChartTimeInPreview: 1,
   enableInstanceDetail: true,
   enablePingChart: true,
   enableConnectBreaks: false,
   pingChartMaxPoints: 0,
-  enableSwap: true,
   isShowHWBarInCard: true,
   isShowValueUnderProgressBar: false,
   selectTrafficProgressStyle: "linear",
