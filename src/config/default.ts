@@ -25,6 +25,7 @@ export interface ConfigOptions {
   isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
+  enableSortControl: boolean; // 是否启用排序控制
   enableGroupedBar: boolean; // 是否启用分组栏
   enableInstanceDetail: boolean; // 是否启用实例详情
   enablePingChart: boolean; // 是否启用延迟图表
@@ -66,6 +67,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   isShowStatsInHeader: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
+  enableSortControl: false,
   enableGroupedBar: true,
   enableInstanceDetail: true,
   enablePingChart: true,

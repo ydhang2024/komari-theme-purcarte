@@ -212,6 +212,13 @@
                 "help": "启用后默认显示统计栏"
             },
             {
+                "key": "enableSortControl",
+                "name": "启用排序控制",
+                "type": "switch",
+                "default": false,
+                "help": "启用后在统计栏添加排序控制下拉菜单选项，分别对流量上下行和网速上下行进行升降排序，仅在启用统计栏时有效"
+            },
+            {
                 "key": "enableGroupedBar",
                 "name": "启用分组栏",
                 "type": "switch",

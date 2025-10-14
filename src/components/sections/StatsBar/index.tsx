@@ -59,8 +59,12 @@ export const StatsBar = (props: StatsBarProps) => {
     }
   };
 
-  const { isShowStatsInHeader, mergeGroupsWithStats, enableGroupedBar } =
-    useAppConfig();
+  const {
+    isShowStatsInHeader,
+    mergeGroupsWithStats,
+    enableGroupedBar,
+    enableSortControl,
+  } = useAppConfig();
   const isMobile = useIsMobile();
 
   const resolvedStats = useMemo<StatEntry[]>(() => {
@@ -141,11 +145,13 @@ export const StatsBar = (props: StatsBarProps) => {
             displayOptions={displayOptions}
             setDisplayOptions={setDisplayOptions}
           />
-          <SortToggleMenu
-            onSort={handleSort}
-            sortKey={sortKey}
-            sortDirection={sortDirection}
-          />
+          {enableSortControl && (
+            <SortToggleMenu
+              onSort={handleSort}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+            />
+          )}
         </div>
       </div>
     );
@@ -206,13 +212,15 @@ export const StatsBar = (props: StatsBarProps) => {
           setDisplayOptions={setDisplayOptions}
         />
       </div>
-      <div className="absolute right-2">
-        <SortToggleMenu
-          onSort={handleSort}
-          sortKey={sortKey}
-          sortDirection={sortDirection}
-        />
-      </div>
+      {enableSortControl && (
+        <div className="absolute right-2">
+          <SortToggleMenu
+            onSort={handleSort}
+            sortKey={sortKey}
+            sortDirection={sortDirection}
+          />
+        </div>
+      )}
     </div>
   );
 };
