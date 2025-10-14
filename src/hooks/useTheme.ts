@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from "react";
+import { useIsMobile } from "@/hooks/useMobile";
 import { useAppConfig } from "@/config";
 import { DEFAULT_CONFIG, allAppearance } from "@/config/default";
 import type { AppearanceType, ColorType, ViewModeType } from "@/config/default";
@@ -127,9 +128,14 @@ const useStoredState = <T>(
 };
 
 export const useThemeManager = () => {
-  const { selectedDefaultAppearance, selectThemeColor, selectedDefaultView } =
-    useAppConfig();
+  const {
+    selectedDefaultAppearance,
+    selectThemeColor,
+    selectedDefaultView,
+    selectMobileDefaultView,
+  } = useAppConfig();
   const defaultstatusCardsVisibility = useAppConfig().statusCardsVisibility;
+  const isMobile = useIsMobile();
 
   const [appearance, setAppearance] = useStoredState<AppearanceType>(
     "appearance",
@@ -146,6 +152,15 @@ export const useThemeManager = () => {
     "nodeViewMode",
     selectedDefaultView
   );
+
+  useEffect(() => {
+    if (selectMobileDefaultView && isMobile) {
+      setViewMode(selectMobileDefaultView);
+    }
+    if (!isMobile) {
+      setViewMode(selectedDefaultView);
+    }
+  }, [isMobile, selectMobileDefaultView, selectedDefaultView, setViewMode]);
 
   const [statusCardsVisibility, setStatusCardsVisibility] = useStoredState(
     "statusCardsVisibility",

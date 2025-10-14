@@ -2,6 +2,7 @@ import {} from "react";
 import { Button } from "@/components/ui/button";
 import { StatsBar } from "@/components/sections/StatsBar";
 import { NodeGridContainer } from "@/components/sections/NodeGrid";
+import { NodeCompactContainer } from "@/components/sections/NodeCompact";
 import { NodeTable } from "@/components/sections/NodeTable";
 import Loading from "@/components/loading";
 import type { NodeData } from "@/types/node";
@@ -60,6 +61,39 @@ const HomePage: React.FC<HomePageProps> = ({
     return <Loading text="正在努力获取数据中..." />;
   }
 
+  const renderContent = () => {
+    if (viewMode === "grid") {
+      return (
+        <NodeGridContainer
+          nodes={filteredNodes}
+          enableSwap={enableSwap}
+          selectTrafficProgressStyle={selectTrafficProgressStyle}
+        />
+      );
+    }
+    if (viewMode === "compact") {
+      return <NodeCompactContainer nodes={filteredNodes} />;
+    }
+    if (viewMode === "table") {
+      return (
+        <ScrollArea
+          className="purcarte-blur theme-card-style w-full"
+          viewportProps={{ className: "p-2" }}
+          showHorizontalScrollbar>
+          <div className="min-w-[1080px]">
+            <NodeTable
+              nodes={filteredNodes}
+              enableSwap={enableSwap}
+              enableListItemProgressBar={enableListItemProgressBar}
+              selectTrafficProgressStyle={selectTrafficProgressStyle}
+            />
+          </div>
+        </ScrollArea>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="fade-in">
       {enableStatsBar && (!isShowStatsInHeader || isMobile) && (
@@ -94,29 +128,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
       <div className="space-y-4 my-4">
         {filteredNodes.length > 0 ? (
-          viewMode === "grid" ? (
-            <NodeGridContainer
-              nodes={filteredNodes}
-              enableSwap={enableSwap}
-              selectTrafficProgressStyle={selectTrafficProgressStyle}
-            />
-          ) : (
-            <ScrollArea
-              className="purcarte-blur theme-card-style w-full"
-              viewportProps={{ className: "p-2" }}
-              showHorizontalScrollbar>
-              <div className="min-w-[1080px]">
-                {viewMode === "table" && (
-                  <NodeTable
-                    nodes={filteredNodes}
-                    enableSwap={enableSwap}
-                    enableListItemProgressBar={enableListItemProgressBar}
-                    selectTrafficProgressStyle={selectTrafficProgressStyle}
-                  />
-                )}
-              </div>
-            </ScrollArea>
-          )
+          renderContent()
         ) : (
           <div className="flex flex-grow items-center justify-center">
             <Card className="w-full max-w-md">

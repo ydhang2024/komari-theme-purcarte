@@ -59,7 +59,7 @@ const TagItem: React.FC<TagItemProps> = ({
       ref={tagRef}
       data-accent-color={badgeColor}
       className={cn(
-        "rt-reset rt-Badge rt-r-size-1 transition-colors rt-Badge-tag-transparent !block !flex-shrink overflow-hidden text-ellipsis"
+        "rt-reset rt-Badge rt-r-size-1 !text-xs transition-colors rt-Badge-tag-transparent !block !flex-shrink overflow-hidden text-ellipsis"
       )}>
       {text}
     </div>

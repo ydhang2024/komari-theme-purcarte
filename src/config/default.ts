@@ -27,6 +27,7 @@ export interface ConfigOptions {
   enableStatsBar: boolean; // 是否启用统计栏
   enableSortControl: boolean; // 是否启用排序控制
   enableGroupedBar: boolean; // 是否启用分组栏
+  selectMobileDefaultView: ViewModeType; // 移动端默认展示视图
   enableSwap: boolean; // 是否启用SWAP显示
   pingChartTimeInPreview: number; // 预览详情的延迟图表时间范围，单位为小时
   enableInstanceDetail: boolean; // 是否启用实例详情
@@ -70,6 +71,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   enableStatsBar: true,
   enableSortControl: false,
   enableGroupedBar: true,
+  selectMobileDefaultView: "grid",
   enableSwap: true,
   pingChartTimeInPreview: 1,
   enableInstanceDetail: true,
@@ -142,4 +144,4 @@ export const allColors: ColorType[] = [
 export type AppearanceType = "light" | "dark" | "system";
 export const allAppearance: AppearanceType[] = ["light", "dark", "system"];
 
-export type ViewModeType = "grid" | "table";
+export type ViewModeType = "grid" | "table" | "compact";

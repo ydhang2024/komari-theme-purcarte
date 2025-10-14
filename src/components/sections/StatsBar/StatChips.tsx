@@ -26,7 +26,7 @@ export const StatChip = memo(
           )}>
           <div
             className={cn(
-              "text-xs text-secondary-foreground font-semibold",
+              "text-xs font-semibold",
               isMobile ? "" : "tracking-widest"
             )}
             style={
@@ -49,7 +49,7 @@ export const StatChip = memo(
     return (
       <div className="w-full py-1">
         <div className="flex flex-col gap-2 items-center">
-          <label className="text-secondary-foreground">{label}</label>
+          <label>{label}</label>
           <div className={`font-medium -mt-2 ${textLeft ? "text-left" : ""}`}>
             {lines.map((line, index) => (
               <div key={index}>{line}</div>

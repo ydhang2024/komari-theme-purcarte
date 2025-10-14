@@ -4,6 +4,7 @@ import {
   Search,
   Grid3X3,
   Table2,
+  Rows3,
   Moon,
   Sun,
   SunMoon,
@@ -126,19 +127,34 @@ export const Header = (props: HeaderProps) => {
                     <DropdownMenuContent
                       align="end"
                       className="purcarte-blur mt-[.5rem] border-(--accent-4)/50 rounded-xl">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          setViewMode(viewMode === "grid" ? "table" : "grid")
-                        }>
-                        {viewMode === "grid" ? (
-                          <Table2 className="size-4 mr-2 text-primary" />
-                        ) : (
-                          <Grid3X3 className="size-4 mr-2 text-primary" />
-                        )}
-                        <span>
-                          {viewMode === "grid" ? "表格视图" : "网格视图"}
-                        </span>
-                      </DropdownMenuItem>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          {viewMode === "grid" ? (
+                            <Grid3X3 className="size-4 mr-2 text-primary" />
+                          ) : viewMode === "compact" ? (
+                            <Rows3 className="size-4 mr-2 text-primary" />
+                          ) : (
+                            <Table2 className="size-4 mr-2 text-primary" />
+                          )}
+                          <span>切换视图</span>
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent className="purcarte-blur border-(--accent-4)/50 rounded-xl">
+                          <DropdownMenuItem onClick={() => setViewMode("grid")}>
+                            <Grid3X3 className="size-4 mr-2 text-primary" />
+                            <span>网格视图</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setViewMode("compact")}>
+                            <Rows3 className="size-4 mr-2 text-primary" />
+                            <span>紧凑视图</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setViewMode("table")}>
+                            <Table2 className="size-4 mr-2 text-primary" />
+                            <span>表格视图</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                           {rawAppearance === "light" ? (
@@ -213,18 +229,35 @@ export const Header = (props: HeaderProps) => {
                       )}
                     </Button>
                   )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      setViewMode(viewMode === "grid" ? "table" : "grid")
-                    }>
-                    {viewMode === "grid" ? (
-                      <Table2 className="size-5 text-primary" />
-                    ) : (
-                      <Grid3X3 className="size-5 text-primary" />
-                    )}
-                  </Button>
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        {viewMode === "grid" ? (
+                          <Grid3X3 className="size-5 text-primary" />
+                        ) : viewMode === "compact" ? (
+                          <Rows3 className="size-5 text-primary" />
+                        ) : (
+                          <Table2 className="size-5 text-primary" />
+                        )}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="purcarte-blur mt-[.5rem] border-(--accent-4)/50 rounded-xl">
+                      <DropdownMenuItem onClick={() => setViewMode("grid")}>
+                        <Grid3X3 className="size-4 mr-2 text-primary" />
+                        <span>网格视图</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setViewMode("compact")}>
+                        <Rows3 className="size-4 mr-2 text-primary" />
+                        <span>紧凑视图</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setViewMode("table")}>
+                        <Table2 className="size-4 mr-2 text-primary" />
+                        <span>表格视图</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">

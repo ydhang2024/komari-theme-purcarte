@@ -117,6 +117,7 @@
 
 - **默认主题颜色** (`selectThemeColor`)
   - **类型:** `select`
+  - **可选项:** `gray`, `gold`, `bronze`, `brown`, `yellow`, `amber`, `orange`, `tomato`, `red`, `ruby`, `crimson`, `pink`, `plum`, `purple`, `violet`, `iris`, `indigo`, `blue`, `cyan`, `teal`, `jade`, `green`, `grass`, `lime`, `mint`, `sky`
   - **默认值:** `violet`
   - **说明:** 设置默认主题颜色，颜色对照请参考：[Radix Color](https://www.radix-ui.com/themes/docs/theme/color)
 
@@ -127,13 +128,15 @@
   - **默认值:** `true`
   - **说明:** 启用后将优先使用用户浏览器本地配置的视图和外观设置。关闭后将强制使用下方的主题配置，本地可调整但刷新即恢复
 
-- **默认展示视图** (`selectedDefaultView`)
+- **桌面端默认展示视图** (`selectedDefaultView`)
   - **类型:** `select`
+  - **可选项:** `grid`, `table`, `compact`
   - **默认值:** `grid`
-  - **说明:** 设置默认展示视图为网格或表格
+  - **说明:** 设置默认展示视图为网格、表格或紧凑型
 
 - **默认外观** (`selectedDefaultAppearance`)
   - **类型:** `select`
+  - **可选项:** `system`, `light`, `dark`
   - **默认值:** `system`
   - **说明:** 设置默认外观为浅色、深色或系统主题
 
@@ -211,6 +214,12 @@
   - **默认值:** `true`
   - **说明:** 启用后默认显示 SWAP 信息
 
+- **移动端默认展示视图** (`selectMobileDefaultView`)
+  - **类型:** `select`
+  - **可选项:** `grid`, `table`, `compact`
+  - **默认值:** `grid`
+  - **说明:** 设置移动端默认展示视图为网格、表格或紧凑型
+
 - **预览详情的延迟图表时间范围** (`pingChartTimeInPreview`)
   - **类型:** `number`
   - **默认值:** `1`
@@ -228,6 +237,7 @@
 
 - **流量进度条样式** (`selectTrafficProgressStyle`)
   - **类型:** `select`
+  - **可选项:** `circular`, `linear`
   - **默认值:** `circular`
   - **说明:** 设置流量进度条样式为 circular（环形）或 linear（线形）
 

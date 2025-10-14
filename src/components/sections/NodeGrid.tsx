@@ -160,7 +160,7 @@ export const NodeGrid = ({
         </button>
       </CardHeader>
       <CardContent className="flex-grow space-y-3 text-sm text-nowrap">
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 mb-2">
           <Tag tags={tagList} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-2"></div>
