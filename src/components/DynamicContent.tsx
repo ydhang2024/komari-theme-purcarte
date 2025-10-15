@@ -68,7 +68,7 @@ export function DynamicContent({ children }: { children: ReactNode }) {
           loop
           muted
           playsInline
-          className="fixed right-0 bottom-0 min-w-full min-h-full w-auto h-auto -z-1 object-cover"
+          className="fixed bg-center top-0 min-w-full min-h-full w-auto h-auto -z-1 object-cover"
         />
       )}
       <div className="fade-in">{children}</div>

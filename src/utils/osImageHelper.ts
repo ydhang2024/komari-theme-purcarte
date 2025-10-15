@@ -13,53 +13,63 @@ interface OSConfig {
 const osConfigs: OSConfig[] = [
   {
     name: "Alibaba",
-    image: "/assets/os-alibaba.svg",
+    image: "/assets/logo/os-alibaba.svg",
     keywords: ["alibaba"],
   },
   {
     name: "AlmaLinux",
-    image: "/assets/os-alma.svg",
+    image: "/assets/logo/os-alma.svg",
     keywords: ["alma", "almalinux"],
   },
   {
     name: "Alpine Linux",
-    image: "/assets/os-alpine.webp",
+    image: "/assets/logo/os-alpine.webp",
     keywords: ["alpine", "alpine linux"],
   },
   {
     name: "Arch Linux",
-    image: "/assets/os-arch.svg",
+    image: "/assets/logo/os-arch.svg",
     keywords: ["arch", "archlinux", "arch linux"],
   },
   {
     name: "Armbian",
-    image: "/assets/os-armbian.svg",
+    image: "/assets/logo/os-armbian.svg",
     keywords: ["armbian"],
   },
   {
+    name: "Astra Linux",
+    image: "/assets/logo/os-astra.svg",
+    keywords: ["astra", "astra linux"],
+  },
+  {
     name: "CentOS",
-    image: "/assets/os-centos.svg",
+    image: "/assets/logo/os-centos.svg",
     keywords: ["centos", "cent os"],
   },
   {
     name: "Debian",
-    image: "/assets/os-debian.svg",
+    image: "/assets/logo/os-debian.svg",
     keywords: ["debian", "deb"],
   },
   {
     name: "Fedora",
-    image: "/assets/os-fedora.svg",
+    image: "/assets/logo/os-fedora.svg",
     keywords: ["fedora"],
   },
   {
     name: "FreeBSD",
-    image: "/assets/os-freebsd.svg",
+    image: "/assets/logo/os-freebsd.svg",
     keywords: ["freebsd", "bsd"],
   },
   {
     name: "Gentoo",
-    image: "/assets/os-gentoo.svg",
+    image: "/assets/logo/os-gentoo.svg",
     keywords: ["gentoo"],
+  },
+  {
+    name: "Huawei",
+    image: "/assets/logo/os-huawei.svg",
+    keywords: ["huawei", "euleros", "euler os"],
   },
   {
     name: "ImmortalWrt",
@@ -67,53 +77,66 @@ const osConfigs: OSConfig[] = [
     keywords: ["immortalwrt", "immortal", "emmortal"],
   },
   {
+    name: "Orange Pi",
+    image: "/assets/logo/os-orange-pi.svg",
+    keywords: ["orange pi", "orangepi"],
+  },
+  {
     name: "iStoreOS",
-    image: "/assets/os-istore.png",
+    image: "/assets/logo/os-istore.png",
     keywords: ["istore", "istoreos", "istore os"],
   },
   {
     name: "Kali Linux",
-    image: "/assets/os-kail.svg",
+    image: "/assets/logo/os-kail.svg",
     keywords: ["kail", "kali", "kali linux"],
   },
   {
-    name: "Linux Mint",
-    image: "/assets/os-mint.svg",
-    keywords: ["mint", "linux mint"],
-  },
-  {
     name: "macOS",
-    image: "/assets/os-macos.svg",
+    image: "/assets/logo/os-macos.svg",
     keywords: ["macos"],
   },
   {
     name: "Manjaro",
-    image: "/assets/os-manjaro-.svg",
+    image: "/assets/logo/os-manjaro.svg",
     keywords: ["manjaro"],
   },
   {
+    name: "Linux Mint",
+    image: "/assets/logo/os-mint.svg",
+    keywords: ["mint", "linux mint"],
+  },
+  {
     name: "NixOS",
-    image: "/assets/os-nix.svg",
+    image: "/assets/logo/os-nix.svg",
     keywords: ["nixos", "nix os", "nix"],
   },
   {
     name: "OpenCloudOS",
-    image: "/assets/os-opencloud.svg",
+    image: "/assets/logo/os-opencloud.svg",
     keywords: ["opencloud"],
   },
   {
     name: "openSUSE",
-    image: "/assets/os-openSUSE.svg",
+    image: "/assets/logo/os-openSUSE.svg",
     keywords: ["opensuse", "suse"],
   },
   {
     name: "OpenWrt",
+<<<<<<< HEAD
     image: "/assets/os-immortalwrt.svg",
+=======
+    image: "/assets/logo/os-openwrt.svg",
+>>>>>>> upstream/main
     keywords: ["openwrt", "open wrt", "open-wrt", "qwrt"],
   },
   {
     name: "Proxmox VE",
+<<<<<<< HEAD
     image: "/assets/os-proxmox.svg",
+=======
+    image: "/assets/logo/os-proxmox.ico",
+>>>>>>> upstream/main
     keywords: ["proxmox", "proxmox ve"],
   },
   {
@@ -123,27 +146,36 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "Red Hat",
-    image: "/assets/os-redhat.svg",
+    image: "/assets/logo/os-redhat.svg",
     keywords: ["redhat", "rhel", "red hat"],
   },
   {
     name: "Rocky Linux",
-    image: "/assets/os-rocky.svg",
+    image: "/assets/logo/os-rocky.svg",
     keywords: ["rocky", "rocky linux"],
   },
   {
     name: "Synology DSM",
+<<<<<<< HEAD
     image: "/assets/os-synology.svg",
+=======
+    image: "/assets/logo/os-synology.ico",
+>>>>>>> upstream/main
     keywords: ["synology", "dsm", "synology dsm"],
   },
   {
     name: "Ubuntu",
-    image: "/assets/os-ubuntu.svg",
+    image: "/assets/logo/os-ubuntu.svg",
     keywords: ["ubuntu", "elementary"],
   },
   {
+    name: "Unraid",
+    image: "/assets/logo/os-unraid.svg",
+    keywords: ["unraid"],
+  },
+  {
     name: "Windows",
-    image: "/assets/os-windows.svg",
+    image: "/assets/logo/os-windows.svg",
     keywords: ["windows", "win", "microsoft", "ms"],
   },
 ];
@@ -151,7 +183,7 @@ const osConfigs: OSConfig[] = [
 // 默认配置
 const defaultOSConfig: OSConfig = {
   name: "Unknown",
-  image: "/assets/TablerHelp.svg",
+  image: "/assets/logo/linux.svg",
   keywords: ["unknown"],
 };
 

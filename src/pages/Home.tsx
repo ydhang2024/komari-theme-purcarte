@@ -1,16 +1,15 @@
-import { useState, useMemo, useEffect } from "react";
+import {} from "react";
 import { Button } from "@/components/ui/button";
 import { StatsBar } from "@/components/sections/StatsBar";
-import { NodeGrid } from "@/components/sections/NodeGrid";
+import { NodeGridContainer } from "@/components/sections/NodeGrid";
+import { NodeCompactContainer } from "@/components/sections/NodeCompact";
 import { NodeTable } from "@/components/sections/NodeTable";
 import Loading from "@/components/loading";
 import type { NodeData } from "@/types/node";
 import { useNodeData } from "@/contexts/NodeDataContext";
-import { useLiveData } from "@/contexts/LiveDataContext";
 import { useAppConfig } from "@/config";
 import { useTheme } from "@/hooks/useTheme";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { StatsBarProps } from "@/components/sections/StatsBar";
 import {
   Card,
   CardDescription,
@@ -23,32 +22,27 @@ import { useIsMobile } from "@/hooks/useMobile";
 interface HomePageProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  setStatsBarProps: (props: StatsBarProps | null) => void;
+  filteredNodes: (NodeData & { stats?: any })[];
+  selectedGroup: string;
+  setSelectedGroup: (group: string) => void;
+  stats: any;
+  groups: string[];
+  handleSort: (key: any) => void;
 }
-const homeStateCache = {
-  selectedGroup: "所有",
-  hasLoaded: false,
-};
 
 const HomePage: React.FC<HomePageProps> = ({
   searchTerm,
   setSearchTerm,
-  setStatsBarProps,
+  filteredNodes,
+  selectedGroup,
+  setSelectedGroup,
+  stats,
+  groups,
+  handleSort,
 }) => {
   const { viewMode, statusCardsVisibility, setStatusCardsVisibility } =
     useTheme();
-  const {
-    nodes: staticNodes,
-    loading,
-    getGroups,
-    error,
-    refreshNodes,
-  } = useNodeData();
-  const { liveData } = useLiveData();
-  const [selectedGroup, setSelectedGroup] = useState(
-    homeStateCache.selectedGroup
-  );
-  const [isLoaded, setIsLoaded] = useState(homeStateCache.hasLoaded);
+  const { loading, error, refreshNodes } = useNodeData();
   const {
     enableGroupedBar,
     enableStatsBar,
@@ -58,117 +52,47 @@ const HomePage: React.FC<HomePageProps> = ({
     isShowStatsInHeader,
     mergeGroupsWithStats,
   } = useAppConfig();
-  const combinedNodes = useMemo(() => {
-    if (!staticNodes) return [];
-    return staticNodes.map((node) => {
-      const stats = liveData ? liveData[node.uuid] : undefined;
-      return {
-        ...node,
-        stats: stats,
-      };
-    });
-  }, [staticNodes, liveData]);
-
-  const groups = useMemo(() => ["所有", ...getGroups()], [getGroups]);
 
   const isMobile = useIsMobile();
 
-  const filteredNodes = useMemo(() => {
-    return combinedNodes
-      .filter(
-        (node: NodeData & { stats?: any }) =>
-          selectedGroup === "所有" || node.group === selectedGroup
-      )
-      .filter((node: NodeData) =>
-        node.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-  }, [combinedNodes, selectedGroup, searchTerm]);
-
   const hasSearchTerm = searchTerm.trim().length > 0;
 
-  const stats = useMemo(() => {
-    return {
-      onlineCount: filteredNodes.filter((n) => n.stats?.online).length,
-      totalCount: filteredNodes.length,
-      uniqueRegions: new Set(filteredNodes.map((n) => n.region)).size,
-      totalTrafficUp: filteredNodes.reduce(
-        (acc, node) => acc + (node.stats?.net_total_up || 0),
-        0
-      ),
-      totalTrafficDown: filteredNodes.reduce(
-        (acc, node) => acc + (node.stats?.net_total_down || 0),
-        0
-      ),
-      currentSpeedUp: filteredNodes.reduce(
-        (acc, node) => acc + (node.stats?.net_out || 0),
-        0
-      ),
-      currentSpeedDown: filteredNodes.reduce(
-        (acc, node) => acc + (node.stats?.net_in || 0),
-        0
-      ),
-    };
-  }, [filteredNodes]);
-
-  useEffect(() => {
-    if (loading) return;
-
-    if (homeStateCache.hasLoaded) {
-      setIsLoaded(true);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-      homeStateCache.hasLoaded = true;
-    }, 300); // 动画过渡
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [loading]);
-
-  useEffect(() => {
-    if (!loading && !homeStateCache.hasLoaded) {
-      homeStateCache.hasLoaded = true;
-    }
-  }, [loading]);
-
-  useEffect(() => {
-    homeStateCache.selectedGroup = selectedGroup;
-  }, [selectedGroup]);
-
-  useEffect(() => {
-    setStatsBarProps({
-      displayOptions: statusCardsVisibility,
-      setDisplayOptions: setStatusCardsVisibility,
-      stats,
-      loading,
-      enableGroupedBar,
-      groups,
-      selectedGroup,
-      onSelectGroup: setSelectedGroup,
-    });
-  }, [
-    statusCardsVisibility,
-    setStatusCardsVisibility,
-    stats,
-    loading,
-    enableGroupedBar,
-    groups,
-    selectedGroup,
-    setSelectedGroup,
-    setStatsBarProps,
-  ]);
-
-  if (!isLoaded) {
-    return (
-      <Loading
-        text="正在努力获取数据中..."
-        className={!loading ? "fade-out" : ""}
-      />
-    );
+  if (loading) {
+    return <Loading text="正在努力获取数据中..." />;
   }
+
+  const renderContent = () => {
+    if (viewMode === "grid") {
+      return (
+        <NodeGridContainer
+          nodes={filteredNodes}
+          enableSwap={enableSwap}
+          selectTrafficProgressStyle={selectTrafficProgressStyle}
+        />
+      );
+    }
+    if (viewMode === "compact") {
+      return <NodeCompactContainer nodes={filteredNodes} />;
+    }
+    if (viewMode === "table") {
+      return (
+        <ScrollArea
+          className="purcarte-blur theme-card-style w-full"
+          viewportProps={{ className: "p-2" }}
+          showHorizontalScrollbar>
+          <div className="min-w-[1080px]">
+            <NodeTable
+              nodes={filteredNodes}
+              enableSwap={enableSwap}
+              enableListItemProgressBar={enableListItemProgressBar}
+              selectTrafficProgressStyle={selectTrafficProgressStyle}
+            />
+          </div>
+        </ScrollArea>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="fade-in">
@@ -183,6 +107,7 @@ const HomePage: React.FC<HomePageProps> = ({
           groups={groups}
           selectedGroup={selectedGroup}
           onSelectGroup={setSelectedGroup}
+          onSort={handleSort}
         />
       )}
 
@@ -203,34 +128,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
       <div className="space-y-4 my-4">
         {filteredNodes.length > 0 ? (
-          viewMode === "grid" ? (
-            <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
-              {filteredNodes.map((node) => (
-                <NodeGrid
-                  key={node.uuid}
-                  node={node}
-                  enableSwap={enableSwap}
-                  selectTrafficProgressStyle={selectTrafficProgressStyle}
-                />
-              ))}
-            </div>
-          ) : (
-            <ScrollArea
-              className="purcarte-blur theme-card-style w-full"
-              viewportProps={{ className: "p-2" }}
-              showHorizontalScrollbar>
-              <div className="min-w-[1080px]">
-                {viewMode === "table" && (
-                  <NodeTable
-                    nodes={filteredNodes}
-                    enableSwap={enableSwap}
-                    enableListItemProgressBar={enableListItemProgressBar}
-                    selectTrafficProgressStyle={selectTrafficProgressStyle}
-                  />
-                )}
-              </div>
-            </ScrollArea>
-          )
+          renderContent()
         ) : (
           <div className="flex flex-grow items-center justify-center">
             <Card className="w-full max-w-md">

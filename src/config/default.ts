@@ -25,12 +25,15 @@ export interface ConfigOptions {
   isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
+  enableSortControl: boolean; // 是否启用排序控制
   enableGroupedBar: boolean; // 是否启用分组栏
+  selectMobileDefaultView: ViewModeType; // 移动端默认展示视图
+  enableSwap: boolean; // 是否启用SWAP显示
+  pingChartTimeInPreview: number; // 预览详情的延迟图表时间范围，单位为小时
   enableInstanceDetail: boolean; // 是否启用实例详情
   enablePingChart: boolean; // 是否启用延迟图表
   enableConnectBreaks: boolean; // 是否启用连接断点
   pingChartMaxPoints: number; // 延迟图表最大点数
-  enableSwap: boolean; // 是否启用SWAP显示
   isShowHWBarInCard: boolean; // 是否在卡片中显示硬件信息栏
   isShowValueUnderProgressBar: boolean; // 是否在流量进度条下方显示数值
   selectTrafficProgressStyle: "circular" | "linear"; // 流量进度条样式
@@ -66,12 +69,15 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   isShowStatsInHeader: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
+  enableSortControl: false,
   enableGroupedBar: true,
+  selectMobileDefaultView: "grid",
+  enableSwap: true,
+  pingChartTimeInPreview: 1,
   enableInstanceDetail: true,
   enablePingChart: true,
   enableConnectBreaks: false,
   pingChartMaxPoints: 0,
-  enableSwap: true,
   isShowHWBarInCard: true,
   isShowValueUnderProgressBar: false,
   selectTrafficProgressStyle: "linear",
@@ -138,4 +144,4 @@ export const allColors: ColorType[] = [
 export type AppearanceType = "light" | "dark" | "system";
 export const allAppearance: AppearanceType[] = ["light", "dark", "system"];
 
-export type ViewModeType = "grid" | "table";
+export type ViewModeType = "grid" | "table" | "compact";

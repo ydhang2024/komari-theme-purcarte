@@ -1,6 +1,118 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { formatPrice } from "@/utils";
 import type { NodeData } from "@/types/node";
+import type { RpcNodeStatus } from "@/types/rpc";
+import { useNodeData } from "@/contexts/NodeDataContext";
+import { useLiveData } from "@/contexts/LiveDataContext";
+import type { NodeDataContextType } from "@/contexts/NodeDataContext";
+import type { LiveDataContextType } from "@/contexts/LiveDataContext";
+
+type SortKey = "trafficUp" | "trafficDown" | "speedUp" | "speedDown" | null;
+type SortOrder = "asc" | "desc";
+
+export const useNodeListCommons = (searchTerm: string) => {
+  const {
+    nodes: staticNodes,
+    loading,
+    getGroups,
+  } = useNodeData() as NodeDataContextType;
+  const { liveData } = useLiveData() as LiveDataContextType;
+  const [selectedGroup, setSelectedGroup] = useState("所有");
+  const [sortKey, setSortKey] = useState<SortKey>(null);
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+
+  const handleSort = (key: SortKey) => {
+    if (sortKey === key) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortKey(key);
+      setSortOrder("desc");
+    }
+  };
+
+  const combinedNodes = useMemo(() => {
+    if (!staticNodes) return [];
+    return staticNodes.map((node: NodeData) => {
+      const stats = liveData ? liveData[node.uuid] : undefined;
+      return {
+        ...node,
+        stats: stats,
+      };
+    });
+  }, [staticNodes, liveData]);
+
+  const groups = useMemo(() => ["所有", ...getGroups()], [getGroups]);
+
+  const filteredNodes = useMemo(() => {
+    let nodes = combinedNodes
+      .filter(
+        (node: NodeData & { stats?: any }) =>
+          selectedGroup === "所有" || node.group === selectedGroup
+      )
+      .filter((node: NodeData) =>
+        node.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    if (sortKey) {
+      const sortMap: { [key in SortKey & string]: keyof RpcNodeStatus } = {
+        trafficUp: "net_total_up",
+        trafficDown: "net_total_down",
+        speedUp: "net_out",
+        speedDown: "net_in",
+      };
+      const statsKey = sortMap[sortKey];
+
+      nodes.sort((a, b) => {
+        const aValue = Number(a.stats?.[statsKey] || 0);
+        const bValue = Number(b.stats?.[statsKey] || 0);
+
+        if (sortOrder === "asc") {
+          return aValue - bValue;
+        } else {
+          return bValue - aValue;
+        }
+      });
+    }
+
+    return nodes;
+  }, [combinedNodes, selectedGroup, searchTerm, sortKey, sortOrder]);
+
+  const stats = useMemo(() => {
+    return {
+      onlineCount: filteredNodes.filter((n) => n.stats?.online).length,
+      totalCount: filteredNodes.length,
+      uniqueRegions: new Set(filteredNodes.map((n) => n.region)).size,
+      totalTrafficUp: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_total_up || 0),
+        0
+      ),
+      totalTrafficDown: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_total_down || 0),
+        0
+      ),
+      currentSpeedUp: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_out || 0),
+        0
+      ),
+      currentSpeedDown: filteredNodes.reduce(
+        (acc, node) => acc + (node.stats?.net_in || 0),
+        0
+      ),
+    };
+  }, [filteredNodes]);
+
+  return {
+    loading,
+    groups,
+    filteredNodes,
+    stats,
+    selectedGroup,
+    setSelectedGroup,
+    handleSort,
+    sortKey,
+    sortOrder,
+  };
+};
 
 export const useNodeCommons = (node: NodeData & { stats?: any }) => {
   const { stats } = node;
