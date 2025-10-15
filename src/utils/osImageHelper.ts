@@ -73,7 +73,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "ImmortalWrt",
-    image: "/assets/os-immortalwrt.svg",
+    image: "/assets/os-openwrt.svg",
     keywords: ["immortalwrt", "immortal", "emmortal"],
   },
   {
@@ -123,25 +123,17 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "OpenWrt",
-<<<<<<< HEAD
-    image: "/assets/os-immortalwrt.svg",
-=======
     image: "/assets/logo/os-openwrt.svg",
->>>>>>> upstream/main
     keywords: ["openwrt", "open wrt", "open-wrt", "qwrt"],
   },
   {
     name: "Proxmox VE",
-<<<<<<< HEAD
-    image: "/assets/os-proxmox.svg",
-=======
     image: "/assets/logo/os-proxmox.ico",
->>>>>>> upstream/main
     keywords: ["proxmox", "proxmox ve"],
   },
   {
     name: "Qnap",
-    image: "/assets/os-qts.svg",
+    image: "/assets/logo/os-qnap.svg",
     keywords: ["qts","quts hero","qes","qutscloud"],
   },
   {
@@ -156,11 +148,7 @@ const osConfigs: OSConfig[] = [
   },
   {
     name: "Synology DSM",
-<<<<<<< HEAD
-    image: "/assets/os-synology.svg",
-=======
-    image: "/assets/logo/os-synology.ico",
->>>>>>> upstream/main
+    image: "/assets/logo/os-synology.svg",
     keywords: ["synology", "dsm", "synology dsm"],
   },
   {
